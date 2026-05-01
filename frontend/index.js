@@ -4,6 +4,7 @@ import { register, login, logout, getMe, getBooks } from "./api.js";
 const container = document.querySelector(".container");
 const nav = document.querySelector("nav");
 const navLogin = document.querySelector(".nav-login-btn");
+const homepage = document.querySelector("h1");
 
 //Helper Functions
 function clearContainer() {
@@ -19,6 +20,9 @@ async function updateNav() {
   // Remove any previously added nav buttons
   const existingBtn = nav.querySelector(".admin-btn, .profile-btn");
   if (existingBtn) existingBtn.remove();
+
+  const existingProfileName = nav.querySelector(".login-text");
+  if (existingProfileName) existingProfileName.remove();
 
   const token = localStorage.getItem("token");
 
@@ -42,6 +46,7 @@ async function updateNav() {
     }
 
     const loginText = document.createElement("p");
+    loginText.classList.add("login-text");
     loginText.innerText = `Logged in as: ${user.username}`;
     nav.append(loginText);
   } else {
@@ -50,6 +55,8 @@ async function updateNav() {
     navLogin.addEventListener("click", renderLoginPage);
   }
 }
+
+homepage.addEventListener("click", renderHome);
 
 //Render Functions
 function renderLoginPage() {
@@ -73,7 +80,7 @@ function renderLoginPage() {
   inputPassword.classList.add("password-input");
   loginBtn.innerText = "Log In";
   loginBtn.classList.add("login-btn");
-  loginBtn.type = "button";
+  loginBtn.type = "submit";
   text.innerText = "If you have no account, ";
   registerBtn.innerText = "Register here";
   registerBtn.classList.add("register-btn");
@@ -90,11 +97,19 @@ function renderLoginPage() {
 
   registerBtn.addEventListener("click", renderRegisterPage);
 
-  loginBtn.addEventListener("click", async () => {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
     const username = inputUsername.value;
     const password = inputPassword.value;
-    await login(username, password);
-    updateNav();
+    const result = await login(username, password);
+    if (result.error) {
+      const errorMsg = document.createElement("p");
+      errorMsg.innerText = result.error;
+      page.append(errorMsg);
+    } else {
+      updateNav();
+      renderHome();
+    }
   });
 }
 
@@ -147,15 +162,18 @@ function renderRegisterPage() {
     const password = inputPassword.value;
     await register(username, email, password);
     updateNav();
+    renderHome();
   });
 }
 
 async function renderHome() {
+  clearContainer();
+
   const books = await getBooks();
-  console.log(books.data);
+  console.log(books);
   const page = document.createElement("div");
 
-  books.data.forEach((book) => {
+  books.forEach((book) => {
     const card = document.createElement("div");
     const img = document.createElement("img");
     const title = document.createElement("h2");
@@ -171,8 +189,41 @@ async function renderHome() {
 
     card.append(img, title, author, date, pages);
     page.append(card);
-    container.append(page);
+
+    card.addEventListener("click", () => {
+      renderBookPage(book);
+    });
   });
+  container.append(page);
+}
+
+function renderBookPage(book) {
+  clearContainer();
+
+  const page = document.createElement("div");
+  const leftSide = document.createElement("div");
+  const rightSide = document.createElement("div");
+
+  const backBtn = document.createElement("button");
+  const img = document.createElement("img");
+  const title = document.createElement("h2");
+  const author = document.createElement("p");
+  const date = document.createElement("p");
+  const pages = document.createElement("p");
+
+  backBtn.innerText = "Back";
+  img.src = "http://localhost:1337" + book.cover.url;
+  title.innerText = book.title;
+  author.innerText = `by ${book.author}`;
+  date.innerText = `Release Date: ${book.release_date} `;
+  pages.innerText = `Pages:${book.pages}`;
+
+  backBtn.addEventListener("click", renderHome);
+
+  leftSide.append(backBtn, title, author, date, pages);
+  rightSide.append(img);
+  page.append(leftSide, rightSide);
+  container.append(page);
 }
 
 //Page Load

@@ -22,8 +22,9 @@ export async function login(identifier, password) {
     });
 
     localStorage.setItem("token", res.data.jwt);
-  } catch (err) {
-    console.log(err);
+    return res.data;
+  } catch (error) {
+    return { error: error.response?.data?.error?.message || "Login failed" };
   }
 }
 
@@ -48,7 +49,7 @@ export async function getMe() {
 export async function getBooks() {
   try {
     const res = await axios.get(API_URL + "/books?populate=*");
-    return res.data;
+    return res.data.data;
   } catch (err) {
     console.log(err);
   }
