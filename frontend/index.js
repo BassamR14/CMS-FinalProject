@@ -66,6 +66,16 @@ function checkIfWishlisted(user, book, button) {
   }
 }
 
+async function handleWishlistClick(token, book, wishlistBtn) {
+  if (token) {
+    await saveBook(book.documentId);
+    wishlistBtn.innerText = `✓ In "To Read" List`;
+    wishlistBtn.disabled = true;
+  } else {
+    renderLoginPage();
+  }
+}
+
 //Render Functions
 function renderLoginPage() {
   clearContainer();
@@ -208,22 +218,7 @@ async function renderHome() {
 
     wishlistBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      if (token) {
-        const alreadySaved = user.to_read.some(
-          (b) => b.documentId === book.documentId,
-        );
-        if (alreadySaved) {
-          console.log("Book already in wishlist");
-          wishlistBtn.innerText = ` ✓In "To Read" List `;
-          wishlistBtn.disabled = true;
-        } else {
-          await saveBook(book.documentId);
-          wishlistBtn.innerText = ` ✓In "To Read" List `;
-          wishlistBtn.disabled = true;
-        }
-      } else {
-        renderLoginPage();
-      }
+      await handleWishlistClick(token, book, wishlistBtn);
     });
 
     card.addEventListener("click", () => {
@@ -268,22 +263,7 @@ async function renderBookPage(book) {
 
   backBtn.addEventListener("click", renderHome);
   wishlistBtn.addEventListener("click", async () => {
-    if (token) {
-      const alreadySaved = user.to_read.some(
-        (b) => b.documentId === book.documentId,
-      );
-      if (alreadySaved) {
-        console.log("Book already in wishlist");
-        wishlistBtn.innerText = ` ✓In "To Read" List `;
-        wishlistBtn.disabled = true;
-      } else {
-        await saveBook(book.documentId);
-        wishlistBtn.innerText = ` ✓In "To Read" List `;
-        wishlistBtn.disabled = true;
-      }
-    } else {
-      renderLoginPage();
-    }
+    await handleWishlistClick(token, book, wishlistBtn);
   });
 }
 
