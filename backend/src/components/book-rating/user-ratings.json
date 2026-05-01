@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_book_rating_user_ratings",
+  "info": {
+    "displayName": "user_ratings"
+  },
+  "options": {},
+  "attributes": {
+    "rating": {
+      "type": "decimal"
+    }
+  },
+  "config": {}
+}
