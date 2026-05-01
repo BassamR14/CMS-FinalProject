@@ -35,7 +35,7 @@ export function logout() {
 export async function getMe() {
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.get(API_URL + "/users/me", {
+    const res = await axios.get(API_URL + "/users/me?populate=*", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

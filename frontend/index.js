@@ -14,6 +14,7 @@ function clearContainer() {
 function handleLogout() {
   logout();
   updateNav();
+  renderHome();
 }
 
 async function updateNav() {
@@ -57,6 +58,13 @@ async function updateNav() {
 }
 
 homepage.addEventListener("click", renderHome);
+
+function checkIfWishlisted(user, book, button) {
+  if (user && user.to_read.some((b) => b.documentId === book.documentId)) {
+    button.innerText = ` ✓In "To Read" List `;
+    button.disabled = true;
+  }
+}
 
 //Render Functions
 function renderLoginPage() {
@@ -170,8 +178,11 @@ async function renderHome() {
   clearContainer();
 
   const books = await getBooks();
-  console.log(books);
   const page = document.createElement("div");
+
+  const token = localStorage.getItem("token");
+  const user = token ? await getMe() : null;
+  console.log(user);
 
   books.forEach((book) => {
     const card = document.createElement("div");
@@ -190,14 +201,26 @@ async function renderHome() {
     pages.innerText = `Pages:${book.pages}`;
     wishlistBtn.innerText = "Want to Read";
 
+    checkIfWishlisted(user, book, wishlistBtn);
+
     card.append(img, title, author, date, pages, wishlistBtn);
     page.append(card);
 
     wishlistBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      const token = localStorage.getItem("token");
       if (token) {
-        await saveBook(book.documentId);
+        const alreadySaved = user.to_read.some(
+          (b) => b.documentId === book.documentId,
+        );
+        if (alreadySaved) {
+          console.log("Book already in wishlist");
+          wishlistBtn.innerText = ` ✓In "To Read" List `;
+          wishlistBtn.disabled = true;
+        } else {
+          await saveBook(book.documentId);
+          wishlistBtn.innerText = ` ✓In "To Read" List `;
+          wishlistBtn.disabled = true;
+        }
       } else {
         renderLoginPage();
       }
@@ -210,8 +233,11 @@ async function renderHome() {
   container.append(page);
 }
 
-function renderBookPage(book) {
+async function renderBookPage(book) {
   clearContainer();
+
+  const token = localStorage.getItem("token");
+  const user = token ? await getMe() : null;
 
   const page = document.createElement("div");
   const leftSide = document.createElement("div");
@@ -233,6 +259,8 @@ function renderBookPage(book) {
   pages.innerText = `Pages:${book.pages}`;
   wishlistBtn.innerText = "Want to Read";
 
+  checkIfWishlisted(user, book, wishlistBtn);
+
   leftSide.append(backBtn, title, author, date, pages, wishlistBtn);
   rightSide.append(img);
   page.append(leftSide, rightSide);
@@ -240,9 +268,19 @@ function renderBookPage(book) {
 
   backBtn.addEventListener("click", renderHome);
   wishlistBtn.addEventListener("click", async () => {
-    const token = localStorage.getItem("token");
     if (token) {
-      await saveBook(book.documentId);
+      const alreadySaved = user.to_read.some(
+        (b) => b.documentId === book.documentId,
+      );
+      if (alreadySaved) {
+        console.log("Book already in wishlist");
+        wishlistBtn.innerText = ` ✓In "To Read" List `;
+        wishlistBtn.disabled = true;
+      } else {
+        await saveBook(book.documentId);
+        wishlistBtn.innerText = ` ✓In "To Read" List `;
+        wishlistBtn.disabled = true;
+      }
     } else {
       renderLoginPage();
     }
