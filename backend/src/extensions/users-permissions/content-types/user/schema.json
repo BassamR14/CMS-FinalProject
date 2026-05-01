@@ -70,6 +70,12 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "to_read": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::book.book",
+      "mappedBy": "saved_by"
     }
   }
 }

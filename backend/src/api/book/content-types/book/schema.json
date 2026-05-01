@@ -42,6 +42,12 @@
       "type": "component",
       "component": "book-rating.user-ratings",
       "repeatable": true
+    },
+    "saved_by": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "to_read"
     }
   }
 }
