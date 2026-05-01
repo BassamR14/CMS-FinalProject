@@ -1,4 +1,4 @@
-import { register, login, logout, getMe, getBooks } from "./api.js";
+import { register, login, logout, getMe, getBooks, saveBook } from "./api.js";
 
 //Query Selects
 const container = document.querySelector(".container");
@@ -67,19 +67,19 @@ function renderLoginPage() {
   const loginForm = document.createElement("form");
   const labelOne = document.createElement("label");
   const inputUsername = document.createElement("input");
+  inputUsername.classList.add("username-input");
   const labelTwo = document.createElement("label");
   const inputPassword = document.createElement("input");
+  inputPassword.classList.add("password-input");
   const loginBtn = document.createElement("button");
+  loginBtn.classList.add("login-btn");
   const text = document.createElement("p");
   const registerBtn = document.createElement("button");
 
   labelOne.innerText = "Username: ";
-  inputUsername.classList.add("username-input");
   labelTwo.innerText = "Password: ";
   inputPassword.type = "password";
-  inputPassword.classList.add("password-input");
   loginBtn.innerText = "Log In";
-  loginBtn.classList.add("login-btn");
   loginBtn.type = "submit";
   text.innerText = "If you have no account, ";
   registerBtn.innerText = "Register here";
@@ -121,24 +121,24 @@ function renderRegisterPage() {
   const registerForm = document.createElement("form");
   const labelOne = document.createElement("label");
   const inputUsername = document.createElement("input");
+  inputUsername.classList.add("username-input");
   const labelTwo = document.createElement("label");
   const inputEmail = document.createElement("input");
+  inputEmail.classList.add("email-input");
   const labelThree = document.createElement("label");
   const inputPassword = document.createElement("input");
+  inputPassword.classList.add("password-input");
   const loginBtn = document.createElement("button");
+  loginBtn.classList.add("login-btn");
   const text = document.createElement("p");
   const registerBtn = document.createElement("button");
 
   labelOne.innerText = "Username: ";
-  inputUsername.classList.add("username-input");
   labelTwo.innerText = "Email: ";
   inputEmail.type = "email";
-  inputEmail.classList.add("email-input");
   labelThree.innerText = "Password: ";
   inputPassword.type = "password";
-  inputPassword.classList.add("password-input");
   loginBtn.innerText = "Log In";
-  loginBtn.classList.add("login-btn");
   loginBtn.type = "button";
   text.innerText = "If you have an account, ";
   registerBtn.innerText = "Register here";
@@ -175,20 +175,25 @@ async function renderHome() {
 
   books.forEach((book) => {
     const card = document.createElement("div");
+    card.classList.add("card");
     const img = document.createElement("img");
     const title = document.createElement("h2");
     const author = document.createElement("p");
     const date = document.createElement("p");
     const pages = document.createElement("p");
+    const wishlist = document.createElement("button");
 
     img.src = "http://localhost:1337" + book.cover.url;
     title.innerText = book.title;
     author.innerText = `by ${book.author}`;
     date.innerText = `Release Date: ${book.release_date} `;
     pages.innerText = `Pages:${book.pages}`;
+    wishlist.innerText = "Want to Read";
 
-    card.append(img, title, author, date, pages);
+    card.append(img, title, author, date, pages, wishlist);
     page.append(card);
+
+    wishlist.addEventListener("click", saveBook(book.id));
 
     card.addEventListener("click", () => {
       renderBookPage(book);
@@ -210,6 +215,7 @@ function renderBookPage(book) {
   const author = document.createElement("p");
   const date = document.createElement("p");
   const pages = document.createElement("p");
+  const wishlist = document.createElement("button");
 
   backBtn.innerText = "Back";
   img.src = "http://localhost:1337" + book.cover.url;
@@ -217,13 +223,15 @@ function renderBookPage(book) {
   author.innerText = `by ${book.author}`;
   date.innerText = `Release Date: ${book.release_date} `;
   pages.innerText = `Pages:${book.pages}`;
+  wishlist.innerText = "Want to Read";
 
-  backBtn.addEventListener("click", renderHome);
-
-  leftSide.append(backBtn, title, author, date, pages);
+  leftSide.append(backBtn, title, author, date, pages, wishlist);
   rightSide.append(img);
   page.append(leftSide, rightSide);
   container.append(page);
+
+  backBtn.addEventListener("click", renderHome);
+  wishlist.addEventListener("click", saveBook(book.id));
 }
 
 //Page Load

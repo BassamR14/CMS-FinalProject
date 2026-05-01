@@ -54,3 +54,19 @@ export async function getBooks() {
     console.log(err);
   }
 }
+
+export async function saveBook(bookId) {
+  const token = localStorage.getItem("token");
+  const user = await getMe();
+  await axios.put(
+    API_URL + `/users/${user.id}`,
+    {
+      to_read: {
+        connect: [bookId],
+      },
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+}
