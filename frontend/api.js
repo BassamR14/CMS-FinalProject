@@ -44,3 +44,12 @@ export async function getMe() {
     console.log(err);
   }
 }
+
+export async function getBooks() {
+  try {
+    const res = await axios.get(API_URL + "/books?populate=*");
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}

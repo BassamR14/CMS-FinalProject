@@ -1,4 +1,4 @@
-import { register, login, logout, getMe } from "./api.js";
+import { register, login, logout, getMe, getBooks } from "./api.js";
 
 //Query Selects
 const container = document.querySelector(".container");
@@ -40,6 +40,10 @@ async function updateNav() {
       profileBtn.innerText = "Profile";
       nav.prepend(profileBtn);
     }
+
+    const loginText = document.createElement("p");
+    loginText.innerText = `Logged in as: ${user.username}`;
+    nav.append(loginText);
   } else {
     navLogin.innerText = "Log In";
     navLogin.removeEventListener("click", handleLogout);
@@ -146,8 +150,34 @@ function renderRegisterPage() {
   });
 }
 
+async function renderHome() {
+  const books = await getBooks();
+  console.log(books.data);
+  const page = document.createElement("div");
+
+  books.data.forEach((book) => {
+    const card = document.createElement("div");
+    const img = document.createElement("img");
+    const title = document.createElement("h2");
+    const author = document.createElement("p");
+    const date = document.createElement("p");
+    const pages = document.createElement("p");
+
+    img.src = "http://localhost:1337" + book.cover.url;
+    title.innerText = book.title;
+    author.innerText = `by ${book.author}`;
+    date.innerText = `Release Date: ${book.release_date} `;
+    pages.innerText = `Pages:${book.pages}`;
+
+    card.append(img, title, author, date, pages);
+    page.append(card);
+    container.append(page);
+  });
+}
+
 //Page Load
 function onPageLoad() {
   updateNav();
+  renderHome();
 }
 onPageLoad();
