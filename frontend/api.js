@@ -56,17 +56,26 @@ export async function getBooks() {
 }
 
 export async function saveBook(bookId) {
-  const token = localStorage.getItem("token");
-  const user = await getMe();
-  await axios.put(
-    API_URL + `/users/${user.id}`,
-    {
-      to_read: {
-        connect: [bookId],
+  try {
+    const token = localStorage.getItem("token");
+    const user = await getMe();
+
+    const res = await axios.put(
+      API_URL + `/books/${bookId}`,
+      {
+        data: {
+          saved_by: {
+            connect: [user.id],
+          },
+        },
       },
-    },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  );
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+
+    return res.data;
+  } catch (err) {
+    console.log("Save failed:", err.response?.data?.error?.message || err);
+  }
 }

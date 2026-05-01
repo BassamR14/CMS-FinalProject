@@ -181,19 +181,27 @@ async function renderHome() {
     const author = document.createElement("p");
     const date = document.createElement("p");
     const pages = document.createElement("p");
-    const wishlist = document.createElement("button");
+    const wishlistBtn = document.createElement("button");
 
     img.src = "http://localhost:1337" + book.cover.url;
     title.innerText = book.title;
     author.innerText = `by ${book.author}`;
     date.innerText = `Release Date: ${book.release_date} `;
     pages.innerText = `Pages:${book.pages}`;
-    wishlist.innerText = "Want to Read";
+    wishlistBtn.innerText = "Want to Read";
 
-    card.append(img, title, author, date, pages, wishlist);
+    card.append(img, title, author, date, pages, wishlistBtn);
     page.append(card);
 
-    wishlist.addEventListener("click", saveBook(book.id));
+    wishlistBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const token = localStorage.getItem("token");
+      if (token) {
+        await saveBook(book.documentId);
+      } else {
+        renderLoginPage();
+      }
+    });
 
     card.addEventListener("click", () => {
       renderBookPage(book);
@@ -215,7 +223,7 @@ function renderBookPage(book) {
   const author = document.createElement("p");
   const date = document.createElement("p");
   const pages = document.createElement("p");
-  const wishlist = document.createElement("button");
+  const wishlistBtn = document.createElement("button");
 
   backBtn.innerText = "Back";
   img.src = "http://localhost:1337" + book.cover.url;
@@ -223,15 +231,22 @@ function renderBookPage(book) {
   author.innerText = `by ${book.author}`;
   date.innerText = `Release Date: ${book.release_date} `;
   pages.innerText = `Pages:${book.pages}`;
-  wishlist.innerText = "Want to Read";
+  wishlistBtn.innerText = "Want to Read";
 
-  leftSide.append(backBtn, title, author, date, pages, wishlist);
+  leftSide.append(backBtn, title, author, date, pages, wishlistBtn);
   rightSide.append(img);
   page.append(leftSide, rightSide);
   container.append(page);
 
   backBtn.addEventListener("click", renderHome);
-  wishlist.addEventListener("click", saveBook(book.id));
+  wishlistBtn.addEventListener("click", async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      await saveBook(book.documentId);
+    } else {
+      renderLoginPage();
+    }
+  });
 }
 
 //Page Load
