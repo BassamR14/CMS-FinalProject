@@ -6,6 +6,8 @@ const nav = document.querySelector("nav");
 const navLogin = document.querySelector(".nav-login-btn");
 const homepage = document.querySelector("h1");
 
+homepage.addEventListener("click", renderHome);
+
 //Helper Functions
 function clearContainer() {
   container.innerHTML = "";
@@ -57,12 +59,10 @@ async function updateNav() {
   }
 }
 
-homepage.addEventListener("click", renderHome);
-
-function checkIfWishlisted(user, book, button) {
+function checkIfWishlisted(user, book, wishlistBtn) {
   if (user && user.to_read.some((b) => b.documentId === book.documentId)) {
-    button.innerText = ` ✓In "To Read" List `;
-    button.disabled = true;
+    wishlistBtn.innerText = ` ✓In "To Read" List `;
+    wishlistBtn.disabled = true;
   }
 }
 
