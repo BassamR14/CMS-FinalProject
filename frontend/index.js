@@ -1,4 +1,12 @@
-import { register, login, logout, getMe, getBooks, saveBook } from "./api.js";
+import {
+  register,
+  login,
+  logout,
+  getMe,
+  getBooks,
+  saveBook,
+  removeBook,
+} from "./api.js";
 
 //Query Selects
 const container = document.querySelector(".container");
@@ -46,6 +54,8 @@ async function updateNav() {
       profileBtn.classList.add("profile-btn");
       profileBtn.innerText = "Profile";
       nav.prepend(profileBtn);
+
+      profileBtn.addEventListener("click", renderProfile);
     }
 
     const loginText = document.createElement("p");
@@ -219,8 +229,6 @@ async function renderHome() {
     wishlistBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
       wishlistBtn.disabled = true;
-      console.log("wishlist clicked");
-
       await handleWishlistClick(token, book, wishlistBtn);
     });
 
@@ -282,8 +290,42 @@ async function renderProfile() {
   const name = document.createElement("h2");
   const email = document.createElement("p");
 
-  const toRead = document.createElement("h3");
+  const toRead = document.createElement("h2");
   const toReadContainer = document.createElement("div");
+
+  name.innerText = user.username;
+  email.innerText = user.email;
+  toRead.innerText = "Reading List";
+
+  page.append(name, email, toRead);
+
+  userReadingList.forEach((book) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    const img = document.createElement("img");
+    const title = document.createElement("h2");
+    const author = document.createElement("p");
+    const date = document.createElement("p");
+    const pages = document.createElement("p");
+    const removeBtn = document.createElement("button");
+
+    img.src = "http://localhost:1337" + book.cover?.url;
+    title.innerText = book.title;
+    author.innerText = `by ${book.author}`;
+    date.innerText = `Release Date: ${book.release_date} `;
+    pages.innerText = `Pages:${book.pages}`;
+    removeBtn.innerText = "Remove";
+
+    card.append(img, title, author, date, pages, removeBtn);
+    page.append(card);
+
+    removeBtn.addEventListener("click", async () => {
+      await removeBook(book.documentId);
+      renderProfile();
+    });
+  });
+
+  container.append(page);
 }
 
 //Page Load

@@ -35,11 +35,14 @@ export function logout() {
 export async function getMe() {
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.get(API_URL + "/users/me?populate=*", {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const res = await axios.get(
+      API_URL + "/users/me?populate[to_read][populate]=cover",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     return res.data;
   } catch (err) {
@@ -83,9 +86,33 @@ export async function saveBook(bookDocumentId) {
       },
     );
 
-    console.log("Book saved!", res.data);
     return res.data;
   } catch (err) {
     console.log("Save failed:", err.response?.data?.error?.message || err);
+  }
+}
+
+export async function removeBook(bookDocumentId) {
+  try {
+    const token = localStorage.getItem("token");
+    const user = await getMe();
+
+    const res = await axios.put(
+      API_URL + `/books/${bookDocumentId}`,
+      {
+        data: {
+          saved_by: {
+            disconnect: [user.id],
+          },
+        },
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+
+    return res.data;
+  } catch (err) {
+    console.log("Remove failed:", err.response?.data?.error?.message || err);
   }
 }
