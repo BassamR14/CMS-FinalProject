@@ -68,7 +68,7 @@ function checkIfWishlisted(user, book, wishlistBtn) {
 
 async function handleWishlistClick(token, book, wishlistBtn) {
   if (token) {
-    await saveBook(book.documentId, book.id);
+    await saveBook(book.documentId);
     wishlistBtn.innerText = `✓ On Reading List`;
     wishlistBtn.disabled = true;
   } else {

@@ -56,7 +56,7 @@ export async function getBooks() {
   }
 }
 
-export async function saveBook(bookDocumentId, bookId) {
+export async function saveBook(bookDocumentId) {
   try {
     const token = localStorage.getItem("token");
     const user = await getMe();
