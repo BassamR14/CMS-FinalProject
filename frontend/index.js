@@ -61,15 +61,15 @@ async function updateNav() {
 
 function checkIfWishlisted(user, book, wishlistBtn) {
   if (user && user.to_read.some((b) => b.documentId === book.documentId)) {
-    wishlistBtn.innerText = ` ✓In "To Read" List `;
+    wishlistBtn.innerText = ` ✓On Reading List`;
     wishlistBtn.disabled = true;
   }
 }
 
 async function handleWishlistClick(token, book, wishlistBtn) {
   if (token) {
-    await saveBook(book.documentId);
-    wishlistBtn.innerText = `✓ In "To Read" List`;
+    await saveBook(book.documentId, book.id);
+    wishlistBtn.innerText = `✓ On Reading List`;
     wishlistBtn.disabled = true;
   } else {
     renderLoginPage();
@@ -218,6 +218,9 @@ async function renderHome() {
 
     wishlistBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
+      wishlistBtn.disabled = true;
+      console.log("wishlist clicked");
+
       await handleWishlistClick(token, book, wishlistBtn);
     });
 
@@ -263,8 +266,24 @@ async function renderBookPage(book) {
 
   backBtn.addEventListener("click", renderHome);
   wishlistBtn.addEventListener("click", async () => {
+    wishlistBtn.disabled = true;
     await handleWishlistClick(token, book, wishlistBtn);
   });
+}
+
+async function renderProfile() {
+  clearContainer();
+
+  const token = localStorage.getItem("token");
+  const user = token ? await getMe() : null;
+  const userReadingList = user.to_read;
+
+  const page = document.createElement("div");
+  const name = document.createElement("h2");
+  const email = document.createElement("p");
+
+  const toRead = document.createElement("h3");
+  const toReadContainer = document.createElement("div");
 }
 
 //Page Load

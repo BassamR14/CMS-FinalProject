@@ -40,6 +40,7 @@ export async function getMe() {
         Authorization: `Bearer ${token}`,
       },
     });
+
     return res.data;
   } catch (err) {
     console.log(err);
@@ -55,13 +56,21 @@ export async function getBooks() {
   }
 }
 
-export async function saveBook(bookId) {
+export async function saveBook(bookDocumentId, bookId) {
   try {
     const token = localStorage.getItem("token");
     const user = await getMe();
 
+    const alreadySaved = user.to_read.some(
+      (b) => b.documentId === bookDocumentId,
+    );
+    if (alreadySaved) {
+      console.log("Already in reading list");
+      return;
+    }
+
     const res = await axios.put(
-      API_URL + `/books/${bookId}`,
+      API_URL + `/books/${bookDocumentId}`,
       {
         data: {
           saved_by: {
@@ -74,6 +83,7 @@ export async function saveBook(bookId) {
       },
     );
 
+    console.log("Book saved!", res.data);
     return res.data;
   } catch (err) {
     console.log("Save failed:", err.response?.data?.error?.message || err);

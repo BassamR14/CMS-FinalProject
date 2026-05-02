@@ -438,7 +438,7 @@ export interface ApiBookBook extends Struct.CollectionTypeSchema {
     singularName: 'book';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     author: Schema.Attribute.String & Schema.Attribute.Required;
