@@ -15,3 +15,8 @@ img {
   margin: 5px;
   padding: 10px;
 }
+
+button.active {
+  background-color: blue;
+  color: white;
+}

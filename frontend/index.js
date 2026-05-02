@@ -289,43 +289,80 @@ async function renderProfile() {
   const page = document.createElement("div");
   const name = document.createElement("h2");
   const email = document.createElement("p");
-
   const toRead = document.createElement("h2");
-  const toReadContainer = document.createElement("div");
 
   name.innerText = user.username;
   email.innerText = user.email;
   toRead.innerText = "Reading List";
 
-  page.append(name, email, toRead);
+  const toReadContainer = document.createElement("div");
+  const sortContainer = document.createElement("div");
+  const sortText = document.createElement("p");
+  const sortByAuthorBtn = document.createElement("button");
+  const sortByTitleBtn = document.createElement("button");
 
-  userReadingList.forEach((book) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    const img = document.createElement("img");
-    const title = document.createElement("h2");
-    const author = document.createElement("p");
-    const date = document.createElement("p");
-    const pages = document.createElement("p");
-    const removeBtn = document.createElement("button");
+  sortText.innerText = "Sort by:";
+  sortByAuthorBtn.innerText = "Author";
+  sortByTitleBtn.innerText = "Title";
 
-    img.src = "http://localhost:1337" + book.cover?.url;
-    title.innerText = book.title;
-    author.innerText = `by ${book.author}`;
-    date.innerText = `Release Date: ${book.release_date} `;
-    pages.innerText = `Pages:${book.pages}`;
-    removeBtn.innerText = "Remove";
+  sortContainer.append(sortText, sortByAuthorBtn, sortByTitleBtn);
+  toReadContainer.append(sortContainer);
+  page.append(name, email, toRead, toReadContainer);
+  container.append(page);
 
-    card.append(img, title, author, date, pages, removeBtn);
-    page.append(card);
+  function renderCards(list) {
+    toReadContainer.querySelectorAll(".card").forEach((c) => c.remove());
 
-    removeBtn.addEventListener("click", async () => {
-      await removeBook(book.documentId);
-      renderProfile();
+    list.forEach((book) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      const img = document.createElement("img");
+      const title = document.createElement("h2");
+      const author = document.createElement("p");
+      const date = document.createElement("p");
+      const pages = document.createElement("p");
+      const removeBtn = document.createElement("button");
+
+      img.src = "http://localhost:1337" + book.cover?.url;
+      title.innerText = book.title;
+      author.innerText = `by ${book.author}`;
+      date.innerText = `Release Date: ${book.release_date}`;
+      pages.innerText = `Pages: ${book.pages}`;
+      removeBtn.innerText = "Remove";
+
+      card.append(img, title, author, date, pages, removeBtn);
+      toReadContainer.append(card);
+
+      removeBtn.addEventListener("click", async () => {
+        await removeBook(book.documentId);
+        renderProfile();
+      });
     });
+  }
+
+  renderCards(userReadingList);
+
+  sortByAuthorBtn.addEventListener("click", () => {
+    const isActive = sortByAuthorBtn.classList.contains("active");
+    sortByAuthorBtn.classList.toggle("active");
+    sortByTitleBtn.classList.remove("active");
+    renderCards(
+      isActive
+        ? userReadingList
+        : userReadingList.toSorted((a, b) => a.author.localeCompare(b.author)),
+    );
   });
 
-  container.append(page);
+  sortByTitleBtn.addEventListener("click", () => {
+    const isActive = sortByTitleBtn.classList.contains("active");
+    sortByTitleBtn.classList.toggle("active");
+    sortByAuthorBtn.classList.remove("active");
+    renderCards(
+      isActive
+        ? userReadingList
+        : userReadingList.toSorted((a, b) => a.title.localeCompare(b.title)),
+    );
+  });
 }
 
 //Page Load
