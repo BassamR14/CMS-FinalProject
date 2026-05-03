@@ -53,16 +53,11 @@ async function updateNav() {
     } else {
       const profileBtn = document.createElement("button");
       profileBtn.classList.add("profile-btn");
-      profileBtn.innerText = "Profile";
+      profileBtn.innerText = `${user.username}'s Profile`;
       nav.prepend(profileBtn);
 
       profileBtn.addEventListener("click", renderProfile);
     }
-
-    const loginText = document.createElement("p");
-    loginText.classList.add("login-text");
-    loginText.innerText = `Logged in as: ${user.username}`;
-    nav.append(loginText);
   } else {
     navLogin.innerText = "Log In";
     navLogin.removeEventListener("click", handleLogout);
