@@ -6,6 +6,7 @@ import {
   getBooks,
   saveBook,
   removeBook,
+  getSettings,
 } from "./api.js";
 
 //Query Selects
@@ -84,6 +85,11 @@ async function handleWishlistClick(token, book, wishlistBtn) {
   } else {
     renderLoginPage();
   }
+}
+
+async function applyTheme() {
+  const settings = await getSettings();
+  document.body.className = settings.theme;
 }
 
 //Render Functions
@@ -367,6 +373,7 @@ async function renderProfile() {
 
 //Page Load
 function onPageLoad() {
+  applyTheme();
   updateNav();
   renderHome();
 }

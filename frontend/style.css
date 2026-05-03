@@ -1,3 +1,31 @@
+/* Theme */
+body.modern {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --border: #1a1a1a;
+}
+
+body.retro {
+  --bg: #f5f0e8;
+  --text: #2c2c2c;
+  --border: #8b7355;
+}
+
+body.vaporwave {
+  --bg: #1a0533;
+  --text: #ff71ce;
+  --border: #b967ff;
+}
+
+/* Styling */
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -11,12 +39,12 @@ img {
 }
 
 .card {
-  border: 1px solid black;
+  border: 1px solid var(--border);
   margin: 5px;
   padding: 10px;
 }
 
 button.active {
-  background-color: blue;
-  color: white;
+  background-color: var(--text);
+  color: var(--bg);
 }

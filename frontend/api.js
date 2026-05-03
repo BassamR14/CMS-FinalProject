@@ -116,3 +116,9 @@ export async function removeBook(bookDocumentId) {
     console.log("Remove failed:", err.response?.data?.error?.message || err);
   }
 }
+
+export async function getSettings() {
+  const res = await axios.get(API_URL + "/site-setting");
+  console.log(res.data);
+  return res.data.data;
+}
