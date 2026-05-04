@@ -365,15 +365,18 @@ async function renderProfile() {
   const token = localStorage.getItem("token");
   const user = token ? await getMe() : null;
   const userReadingList = user.to_read;
+  const userRatedBooks = user.ratings;
 
   const page = document.createElement("div");
   const name = document.createElement("h2");
   const email = document.createElement("p");
   const toRead = document.createElement("h2");
+  const ratedBooks = document.createElement("h2");
 
   name.innerText = user.username;
   email.innerText = user.email;
   toRead.innerText = "Reading List";
+  ratedBooks.innerText = "Rated Books";
 
   const toReadContainer = document.createElement("div");
   const sortContainer = document.createElement("div");
@@ -385,12 +388,31 @@ async function renderProfile() {
   sortByAuthorBtn.innerText = "Author";
   sortByTitleBtn.innerText = "Title";
 
+  const ratedBooksContainer = document.createElement("div");
+  const ratedSortContainer = document.createElement("div");
+  const sortRatedText = document.createElement("p");
+  const sortRatedByAuthorBtn = document.createElement("button");
+  const sortRatedByTitleBtn = document.createElement("button");
+  const sortRatedByRatingBtn = document.createElement("button");
+
+  sortRatedText.innerText = "Sort by:";
+  sortRatedByAuthorBtn.innerText = "Author";
+  sortRatedByTitleBtn.innerText = "Title";
+  sortRatedByRatingBtn.innerText = "Rating";
+
   sortContainer.append(sortText, sortByAuthorBtn, sortByTitleBtn);
   toReadContainer.append(sortContainer);
-  page.append(name, email, toRead, toReadContainer);
+  ratedSortContainer.append(
+    sortRatedText,
+    sortRatedByAuthorBtn,
+    sortRatedByTitleBtn,
+    sortRatedByRatingBtn,
+  );
+  ratedBooksContainer.append(ratedSortContainer);
+  page.append(name, email, toRead, toReadContainer, ratedBooksContainer);
   container.append(page);
 
-  function renderCards(list) {
+  function renderReadingList(list) {
     toReadContainer.querySelectorAll(".card").forEach((c) => c.remove());
 
     list.forEach((book) => {
@@ -420,13 +442,13 @@ async function renderProfile() {
     });
   }
 
-  renderCards(userReadingList);
+  renderReadingList(userReadingList);
 
   sortByAuthorBtn.addEventListener("click", () => {
     const isActive = sortByAuthorBtn.classList.contains("active");
     sortByAuthorBtn.classList.toggle("active");
     sortByTitleBtn.classList.remove("active");
-    renderCards(
+    renderReadingList(
       isActive
         ? userReadingList
         : userReadingList.toSorted((a, b) => a.author.localeCompare(b.author)),
@@ -437,10 +459,73 @@ async function renderProfile() {
     const isActive = sortByTitleBtn.classList.contains("active");
     sortByTitleBtn.classList.toggle("active");
     sortByAuthorBtn.classList.remove("active");
-    renderCards(
+    renderReadingList(
       isActive
         ? userReadingList
         : userReadingList.toSorted((a, b) => a.title.localeCompare(b.title)),
+    );
+  });
+
+  function renderRatedList(list) {
+    ratedBooksContainer.querySelectorAll(".card").forEach((c) => c.remove());
+
+    list.forEach((book) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      const img = document.createElement("img");
+      const title = document.createElement("h2");
+      const author = document.createElement("p");
+      const rating = document.createElement("p");
+
+      img.src = "http://localhost:1337" + book.book.cover?.url;
+      title.innerText = book.book.title;
+      author.innerText = `by ${book.book.author}`;
+      rating.innerText = `My rating: ${book.value}/5`;
+
+      card.append(img, title, author, rating);
+      ratedBooksContainer.append(card);
+    });
+  }
+
+  renderRatedList(userRatedBooks);
+
+  sortRatedByAuthorBtn.addEventListener("click", () => {
+    const isActive = sortRatedByAuthorBtn.classList.contains("active");
+    sortRatedByAuthorBtn.classList.toggle("active");
+    sortRatedByTitleBtn.classList.remove("active");
+    sortRatedByRatingBtn.classList.remove("active");
+    renderRatedList(
+      isActive
+        ? userRatedBooks
+        : userRatedBooks.toSorted((a, b) =>
+            a.book.author.localeCompare(b.book.author),
+          ),
+    );
+  });
+
+  sortRatedByTitleBtn.addEventListener("click", () => {
+    const isActive = sortRatedByTitleBtn.classList.contains("active");
+    sortRatedByTitleBtn.classList.toggle("active");
+    sortRatedByAuthorBtn.classList.remove("active");
+    sortRatedByRatingBtn.classList.remove("active");
+    renderRatedList(
+      isActive
+        ? userRatedBooks
+        : userRatedBooks.toSorted((a, b) =>
+            a.book.title.localeCompare(b.book.title),
+          ),
+    );
+  });
+
+  sortRatedByRatingBtn.addEventListener("click", () => {
+    const isActive = sortRatedByRatingBtn.classList.contains("active");
+    sortRatedByRatingBtn.classList.toggle("active");
+    sortRatedByAuthorBtn.classList.remove("active");
+    sortRatedByTitleBtn.classList.remove("active");
+    renderRatedList(
+      isActive
+        ? userRatedBooks
+        : userRatedBooks.toSorted((a, b) => b.value - a.value),
     );
   });
 }

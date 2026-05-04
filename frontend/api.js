@@ -37,7 +37,7 @@ export async function getMe() {
   try {
     const res = await axios.get(
       API_URL +
-        "/users/me?populate[to_read][populate]=cover&populate[ratings][populate]=book",
+        "/users/me?populate[to_read][populate]=cover&populate[ratings][populate][book][populate]=cover",
       {
         headers: {
           Authorization: `Bearer ${token}`,
