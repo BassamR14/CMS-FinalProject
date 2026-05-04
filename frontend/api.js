@@ -36,7 +36,8 @@ export async function getMe() {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
-      API_URL + "/users/me?populate[to_read][populate]=cover",
+      API_URL +
+        "/users/me?populate[to_read][populate]=cover&populate[ratings][populate]=book",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,11 +53,21 @@ export async function getMe() {
 
 export async function getBooks() {
   try {
-    const res = await axios.get(API_URL + "/books?populate=*");
+    const res = await axios.get(
+      API_URL + "/books?populate[cover]=true&populate[ratings]=true",
+    );
     return res.data.data;
   } catch (err) {
     console.log(err);
   }
+}
+
+export async function getBook(documentId) {
+  const res = await axios.get(
+    API_URL +
+      `/books/${documentId}?populate[cover]=true&populate[ratings]=true`,
+  );
+  return res.data.data;
 }
 
 export async function saveBook(bookDocumentId) {
@@ -119,6 +130,37 @@ export async function removeBook(bookDocumentId) {
 
 export async function getSettings() {
   const res = await axios.get(API_URL + "/site-setting");
-  console.log(res.data);
   return res.data.data;
+}
+
+export async function rateBook(bookDocumentId, user, value) {
+  const token = localStorage.getItem("token");
+  const res = await axios.post(
+    API_URL + "/ratings",
+    {
+      data: {
+        value,
+        book: bookDocumentId,
+        user: user.id,
+      },
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+  return res.data;
+}
+
+export async function updateRating(ratingDocumentId, value) {
+  const token = localStorage.getItem("token");
+  const res = await axios.put(
+    API_URL + `/ratings/${ratingDocumentId}`,
+    {
+      data: { value },
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+  return res.data;
 }

@@ -17,7 +17,7 @@ body.vaporwave {
   --border: #b967ff;
 }
 
-/* Styling */
+/* General Styling */
 
 body {
   padding: 0;
@@ -47,4 +47,14 @@ img {
 button.active {
   background-color: var(--text);
   color: var(--bg);
+}
+
+/* Page Styling */
+
+.book-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  padding: 50px;
 }

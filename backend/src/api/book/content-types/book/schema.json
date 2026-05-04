@@ -38,16 +38,17 @@
     "rating": {
       "type": "decimal"
     },
-    "user_rating": {
-      "type": "component",
-      "component": "book-rating.user-ratings",
-      "repeatable": true
-    },
     "saved_by": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
       "inversedBy": "to_read"
+    },
+    "ratings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::rating.rating",
+      "mappedBy": "book"
     }
   }
 }

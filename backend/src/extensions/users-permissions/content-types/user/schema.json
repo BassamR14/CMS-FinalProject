@@ -76,6 +76,12 @@
       "relation": "manyToMany",
       "target": "api::book.book",
       "mappedBy": "saved_by"
+    },
+    "ratings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::rating.rating",
+      "mappedBy": "user"
     }
   }
 }
