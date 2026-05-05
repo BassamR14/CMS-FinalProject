@@ -10,6 +10,8 @@ import {
   getSettings,
   rateBook,
   updateRating,
+  uploadImage,
+  createBook,
 } from "./api.js";
 
 //Query Selects
@@ -53,6 +55,8 @@ async function updateNav() {
       adminBtn.classList.add("admin-btn");
       adminBtn.innerText = "Admin";
       nav.prepend(adminBtn);
+
+      adminBtn.addEventListener("click", renderAdmin);
     } else {
       const profileBtn = document.createElement("button");
       profileBtn.classList.add("profile-btn");
@@ -233,7 +237,7 @@ async function renderHome() {
     author.innerText = `by ${book.author}`;
     date.innerText = `Release Date: ${book.release_date} `;
     pages.innerText = `Pages:${book.pages}`;
-    rating.innerText = book.ratings.length ? `${average}/5` : "No ratings yet";
+    rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
     wishlistBtn.innerText = "Want to Read";
 
     checkIfWishlisted(user, book, wishlistBtn);
@@ -287,7 +291,7 @@ async function renderBookPage(book) {
   author.innerText = `by ${book.author}`;
   date.innerText = `Release Date: ${book.release_date} `;
   pages.innerText = `Pages:${book.pages}`;
-  rating.innerText = book.ratings.length ? `${average}/5` : "No ratings yet";
+  rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
   wishlistBtn.innerText = "Want to Read";
   rateThisBookBtn.innerText = "Rate This Book";
 
@@ -527,6 +531,94 @@ async function renderProfile() {
         ? userRatedBooks
         : userRatedBooks.toSorted((a, b) => b.value - a.value),
     );
+  });
+}
+
+async function renderAdmin() {
+  clearContainer();
+
+  const page = document.createElement("div");
+  const pageTitle = document.createElement("h2");
+  const pagecontainer = document.createElement("div");
+  const form = document.createElement("form");
+
+  const formTitle = document.createElement("h3");
+  formTitle.innerText = "Add Book";
+
+  const labelTitle = document.createElement("label");
+  const title = document.createElement("input");
+  labelTitle.innerText = "Title: ";
+  labelTitle.append(title);
+
+  const labelAuthor = document.createElement("label");
+  const author = document.createElement("input");
+  labelAuthor.innerText = "Author: ";
+  labelAuthor.append(author);
+
+  const labelPages = document.createElement("label");
+  const pages = document.createElement("input");
+  pages.type = "number";
+  labelPages.innerText = "Pages: ";
+  labelPages.append(pages);
+
+  const labelDate = document.createElement("label");
+  const date = document.createElement("input");
+  date.type = "date";
+  labelDate.innerText = "Release Date: ";
+  labelDate.append(date);
+
+  const labelImg = document.createElement("label");
+  const img = document.createElement("input");
+  img.type = "file";
+  labelImg.innerText = "Cover Image: ";
+  labelImg.append(img);
+
+  const addBookBtn = document.createElement("button");
+  addBookBtn.innerText = "Add Book";
+  addBookBtn.type = "button";
+
+  form.append(
+    formTitle,
+    labelTitle,
+    labelAuthor,
+    labelPages,
+    labelDate,
+    labelImg,
+    addBookBtn,
+  );
+  pagecontainer.append(form);
+  page.append(pageTitle, pagecontainer);
+  container.append(page);
+
+  //Functionality
+
+  addBookBtn.addEventListener("click", async () => {
+    if (
+      !title.value ||
+      !author.value ||
+      !pages.value ||
+      !date.value ||
+      !img.files[0]
+    ) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const image = img.files;
+    let imgData = new FormData();
+    imgData.append("files", image[0]);
+
+    const uploadedImage = await uploadImage(imgData);
+
+    const newBook = {
+      title: title.value,
+      author: author.value,
+      pages: pages.value,
+      release_date: date.value,
+      cover: uploadedImage[0].id,
+    };
+
+    await createBook(newBook);
   });
 }
 

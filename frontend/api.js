@@ -63,11 +63,13 @@ export async function getBooks() {
 }
 
 export async function getBook(documentId) {
-  const res = await axios.get(
-    API_URL +
-      `/books/${documentId}?populate[cover]=true&populate[ratings]=true`,
-  );
-  return res.data.data;
+  try {
+    const res = await axios.get(
+      API_URL +
+        `/books/${documentId}?populate[cover]=true&populate[ratings]=true`,
+    );
+    return res.data.data;
+  } catch (err) {}
 }
 
 export async function saveBook(bookDocumentId) {
@@ -134,33 +136,82 @@ export async function getSettings() {
 }
 
 export async function rateBook(bookDocumentId, user, value) {
-  const token = localStorage.getItem("token");
-  const res = await axios.post(
-    API_URL + "/ratings",
-    {
-      data: {
-        value,
-        book: bookDocumentId,
-        user: user.id,
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      API_URL + "/ratings",
+      {
+        data: {
+          value,
+          book: bookDocumentId,
+          user: user.id,
+        },
       },
-    },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  );
-  return res.data;
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    return res.data;
+  } catch (err) {
+    console.log("Rating failed:", err.response?.data?.error?.message || err);
+  }
 }
 
 export async function updateRating(ratingDocumentId, value) {
-  const token = localStorage.getItem("token");
-  const res = await axios.put(
-    API_URL + `/ratings/${ratingDocumentId}`,
-    {
-      data: { value },
-    },
-    {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.put(
+      API_URL + `/ratings/${ratingDocumentId}`,
+      {
+        data: { value },
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    return res.data;
+  } catch (err) {
+    console.log(
+      "Updating rating failed:",
+      err.response?.data?.error?.message || err,
+    );
+  }
+}
+
+export async function uploadImage(imgData) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(API_URL + "/upload", imgData, {
       headers: { Authorization: `Bearer ${token}` },
-    },
-  );
-  return res.data;
+    });
+
+    return res.data;
+  } catch (err) {
+    console.log(
+      "Uploading image failed:",
+      err.response?.data?.error?.message || err,
+    );
+  }
+}
+
+export async function createBook(newBook) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      API_URL + "/books",
+      { data: newBook },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+
+    return res.data;
+  } catch (err) {
+    console.log(
+      "Adding book failed:",
+      err.response?.data?.error?.message || err,
+    );
+  }
 }
