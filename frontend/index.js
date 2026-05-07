@@ -221,8 +221,11 @@ async function renderHome() {
   const hero = document.createElement("img");
   hero.classList.add("hero");
   const booksContainer = document.createElement("div");
+  booksContainer.classList.add("books-container");
   const categories = document.createElement("div");
+  categories.classList.add("categories");
   const booksDisplay = document.createElement("div");
+  booksDisplay.classList.add("book-display");
 
   //Hero
   const body = document.body;
@@ -234,7 +237,7 @@ async function renderHome() {
     hero.src = "./images/vaporwave-banner.png";
   }
 
-  //Category Filter
+  //Category Filter DOM
   const category = document.createElement("h2");
   category.innerText = "Category";
   const novelBtn = document.createElement("button");
@@ -290,6 +293,40 @@ async function renderHome() {
 
   renderBooks(books);
 
+  //Search
+  const searchBar = document.querySelector("#search-bar");
+  searchBar.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const searchInput = searchBar.value.trim();
+
+      if (searchInput === "" || !searchInput) {
+        alert("Searh was empty");
+        return;
+      }
+
+      const filtered = books.filter(
+        (b) =>
+          b.title.toLowerCase().includes(searchInput) ||
+          b.author.toLowerCase().includes(searchInput),
+      );
+
+      if (filtered.length === 0) {
+        const message = document.createElement("p");
+        message.innerText = "No Books Found";
+        booksDisplay.append(message);
+      }
+
+      renderBooks(filtered);
+    }
+  });
+
+  searchBar.addEventListener("search", () => {
+    if (!searchBar.value) {
+      renderBooks(books);
+    }
+  });
+
+  //Category Filter Event Listeners
   novelBtn.addEventListener("click", () => {
     const isActive = novelBtn.classList.contains("active");
     novelBtn.classList.toggle("active");
