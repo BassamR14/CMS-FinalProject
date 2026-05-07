@@ -211,50 +211,115 @@ function renderRegisterPage() {
 async function renderHome() {
   clearContainer();
 
-  const books = await getBooks();
-  const page = document.createElement("div");
-
   const token = localStorage.getItem("token");
   const user = token ? await getMe() : null;
+  const books = await getBooks();
   console.log(books, user);
 
-  books.forEach((book) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
-    const img = document.createElement("img");
-    const title = document.createElement("h2");
-    const author = document.createElement("p");
-    const date = document.createElement("p");
-    const pages = document.createElement("p");
-    const rating = document.createElement("p");
-    const wishlistBtn = document.createElement("button");
+  //DOM
+  const page = document.createElement("div");
+  const hero = document.createElement("img");
+  hero.classList.add("hero");
+  const booksContainer = document.createElement("div");
+  const categories = document.createElement("div");
+  const booksDisplay = document.createElement("div");
 
-    const average =
-      book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
+  //Hero
+  const body = document.body;
+  if (body.classList.contains("modern")) {
+    hero.src = "./images/modern-banner.png";
+  } else if (body.classList.contains("retro")) {
+    hero.src = "./images/retro-banner.png";
+  } else if (body.classList.contains("vaporwave")) {
+    hero.src = "./images/vaporwave-banner.png";
+  }
 
-    img.src = "http://localhost:1337" + book.cover.url;
-    title.innerText = book.title;
-    author.innerText = `by ${book.author}`;
-    date.innerText = `Release Date: ${book.release_date} `;
-    pages.innerText = `Pages:${book.pages}`;
-    rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
-    wishlistBtn.innerText = "Want to Read";
+  //Category Filter
+  const category = document.createElement("h2");
+  category.innerText = "Category";
+  const novelBtn = document.createElement("button");
+  novelBtn.innerText = "Novel";
+  const educationalBtn = document.createElement("button");
+  educationalBtn.innerText = "Educational";
+  const comicBtn = document.createElement("button");
+  comicBtn.innerText = "Comic Books";
 
-    checkIfWishlisted(user, book, wishlistBtn);
+  categories.append(category, novelBtn, educationalBtn, comicBtn);
 
-    card.append(img, title, author, date, pages, rating, wishlistBtn);
-    page.append(card);
+  function renderBooks(list) {
+    booksDisplay.querySelectorAll(".card").forEach((c) => c.remove());
 
-    wishlistBtn.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      wishlistBtn.disabled = true;
-      await handleWishlistClick(token, book, wishlistBtn);
+    list.forEach((book) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+      const img = document.createElement("img");
+      const title = document.createElement("h2");
+      const author = document.createElement("p");
+      const date = document.createElement("p");
+      const pages = document.createElement("p");
+      const rating = document.createElement("p");
+      const wishlistBtn = document.createElement("button");
+
+      const average =
+        book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
+
+      img.src = "http://localhost:1337" + book.cover.url;
+      title.innerText = book.title;
+      author.innerText = `by ${book.author}`;
+      date.innerText = `Release Date: ${book.release_date} `;
+      pages.innerText = `Pages:${book.pages}`;
+      rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
+      wishlistBtn.innerText = "Want to Read";
+
+      checkIfWishlisted(user, book, wishlistBtn);
+
+      card.append(img, title, author, date, pages, rating, wishlistBtn);
+      booksDisplay.append(card);
+
+      wishlistBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        wishlistBtn.disabled = true;
+        await handleWishlistClick(token, book, wishlistBtn);
+      });
+
+      card.addEventListener("click", () => {
+        renderBookPage(book);
+      });
     });
+  }
 
-    card.addEventListener("click", () => {
-      renderBookPage(book);
-    });
+  renderBooks(books);
+
+  novelBtn.addEventListener("click", () => {
+    const isActive = novelBtn.classList.contains("active");
+    novelBtn.classList.toggle("active");
+    educationalBtn.classList.remove("active");
+    comicBtn.classList.remove("active");
+    renderBooks(isActive ? books : books.filter((b) => b.category === "novel"));
   });
+
+  educationalBtn.addEventListener("click", () => {
+    const isActive = educationalBtn.classList.contains("active");
+    educationalBtn.classList.toggle("active");
+    novelBtn.classList.remove("active");
+    comicBtn.classList.remove("active");
+    renderBooks(
+      isActive ? books : books.filter((b) => b.category === "educational"),
+    );
+  });
+
+  comicBtn.addEventListener("click", () => {
+    const isActive = comicBtn.classList.contains("active");
+    comicBtn.classList.toggle("active");
+    educationalBtn.classList.remove("active");
+    novelBtn.classList.remove("active");
+    renderBooks(
+      isActive ? books : books.filter((b) => b.category === "comic-book"),
+    );
+  });
+
+  booksContainer.append(categories, booksDisplay);
+  page.append(hero, booksContainer);
   container.append(page);
 }
 

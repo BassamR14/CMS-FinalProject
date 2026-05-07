@@ -28,14 +28,32 @@ body {
 
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   width: 90%;
   margin: 0 auto;
 }
 
-img {
-  width: 200px;
+header > * {
+  flex: 1;
+}
+
+h1 {
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.hero {
+  width: 100vw;
 }
 
 .card {
@@ -44,12 +62,44 @@ img {
   padding: 10px;
 }
 
+.card img {
+  width: 200px;
+}
+
 button.active {
   background-color: var(--text);
   color: var(--bg);
 }
 
 /* Page Styling */
+
+#search-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  background: var(--bg);
+}
+
+#search-label:focus-within {
+  outline: 2px solid var(--text);
+}
+
+#search-bar {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 1rem;
+  width: 200px;
+}
+
+.material-symbols-outlined {
+  color: var(--text);
+  font-size: 1.2rem;
+}
 
 .book-page {
   display: flex;

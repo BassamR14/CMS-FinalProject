@@ -442,6 +442,9 @@ export interface ApiBookBook extends Struct.CollectionTypeSchema {
   };
   attributes: {
     author: Schema.Attribute.String & Schema.Attribute.Required;
+    category: Schema.Attribute.Enumeration<
+      ['novel', 'educational', 'comic-book']
+    >;
     cover: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -451,7 +454,6 @@ export interface ApiBookBook extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     pages: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
-    rating: Schema.Attribute.Decimal;
     ratings: Schema.Attribute.Relation<'oneToMany', 'api::rating.rating'>;
     release_date: Schema.Attribute.Date;
     saved_by: Schema.Attribute.Relation<

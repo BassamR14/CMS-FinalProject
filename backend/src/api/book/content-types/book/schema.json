@@ -35,9 +35,6 @@
         "audios"
       ]
     },
-    "rating": {
-      "type": "decimal"
-    },
     "saved_by": {
       "type": "relation",
       "relation": "manyToMany",
@@ -49,6 +46,14 @@
       "relation": "oneToMany",
       "target": "api::rating.rating",
       "mappedBy": "book"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "novel",
+        "educational",
+        "comic-book"
+      ]
     }
   }
 }
