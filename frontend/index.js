@@ -101,6 +101,19 @@ function checkIfRated(user, book, rateButton) {
   }
 }
 
+function chooseBackground(element) {
+  if (document.body.classList.contains("modern")) {
+    element.style.backgroundImage = "url('./images/modern.png')";
+  } else if (document.body.classList.contains("retro")) {
+    element.style.backgroundImage = "url('./images/retro.png')";
+  } else if (document.body.classList.contains("vaporwave")) {
+    element.style.backgroundImage = "url('./images/vaporwave.png')";
+  }
+  element.style.backgroundSize = "cover";
+  element.style.backgroundPosition = "center";
+  element.style.minHeight = "100vh";
+}
+
 //Render Functions
 function renderLoginPage() {
   clearContainer();
@@ -108,16 +121,7 @@ function renderLoginPage() {
   const page = document.createElement("div");
   page.classList.add("login-page");
 
-  if (document.body.classList.contains("modern")) {
-    page.style.backgroundImage = "url('./images/modern.png')";
-  } else if (document.body.classList.contains("retro")) {
-    page.style.backgroundImage = "url('./images/retro.png')";
-  } else if (document.body.classList.contains("vaporwave")) {
-    page.style.backgroundImage = "url('./images/vaporwave.png')";
-  }
-  page.style.backgroundSize = "cover";
-  page.style.backgroundPosition = "center";
-  page.style.minHeight = "100vh";
+  chooseBackground(page);
 
   const loginForm = document.createElement("form");
   loginForm.classList.add("login-form");
@@ -176,16 +180,7 @@ function renderRegisterPage() {
   const page = document.createElement("div");
   page.classList.add("login-page");
 
-  if (document.body.classList.contains("modern")) {
-    page.style.backgroundImage = "url('./images/modern.png')";
-  } else if (document.body.classList.contains("retro")) {
-    page.style.backgroundImage = "url('./images/retro.png')";
-  } else if (document.body.classList.contains("vaporwave")) {
-    page.style.backgroundImage = "url('./images/vaporwave.png')";
-  }
-  page.style.backgroundSize = "cover";
-  page.style.backgroundPosition = "center";
-  page.style.minHeight = "100vh";
+  chooseBackground(page);
 
   const registerForm = document.createElement("form");
   registerForm.classList.add("login-form");
