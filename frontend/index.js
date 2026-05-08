@@ -12,6 +12,7 @@ import {
   updateRating,
   uploadImage,
   createBook,
+  deleteBook,
 } from "./api.js";
 
 //Query Selects
@@ -640,6 +641,7 @@ async function renderAdmin() {
   clearContainer();
 
   const page = document.createElement("div");
+  page.classList.add("admin-page");
   const pageTitle = document.createElement("h2");
   pageTitle.innerText = "Admin Dashboard";
   const pagecontainer = document.createElement("div");
@@ -648,13 +650,13 @@ async function renderAdmin() {
   form.classList.add("add-book-form");
   const table = document.createElement("table");
 
-  const tableHeader = document.createElement("th");
-  const bookName = document.createElement("td");
-  const bookAuthor = document.createElement("td");
-  const bookDate = document.createElement("td");
-  const bookPages = document.createElement("td");
-  const bookRating = document.createElement("td");
-  const bookActions = document.createElement("td");
+  const tableHeader = document.createElement("tr");
+  const bookName = document.createElement("th");
+  const bookAuthor = document.createElement("th");
+  const bookDate = document.createElement("th");
+  const bookPages = document.createElement("th");
+  const bookRating = document.createElement("th");
+  const bookActions = document.createElement("th");
 
   bookName.innerText = "Title";
   bookAuthor.innerText = "Author";
@@ -753,6 +755,8 @@ async function renderAdmin() {
   });
 
   function renderTable(list) {
+    table.querySelectorAll("tr:not(:first-child)").forEach((r) => r.remove());
+
     list.forEach((book) => {
       const tr = document.createElement("tr");
       // const img = document.createElement("img");
@@ -778,8 +782,16 @@ async function renderAdmin() {
       deleteBtn.innerText = "Delete";
 
       actions.append(editBtn, deleteBtn);
-      tr.append(img, title, author, date, pages, rating, actions);
+      tr.append(title, author, date, pages, rating, actions);
       table.append(tr);
+
+      //functionality
+
+      deleteBtn.addEventListener("click", async () => {
+        await deleteBook(book.documentId);
+        const freshBooks = await getBooks();
+        renderTable(freshBooks);
+      });
     });
   }
 

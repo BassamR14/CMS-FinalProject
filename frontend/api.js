@@ -215,3 +215,20 @@ export async function createBook(newBook) {
     );
   }
 }
+
+export async function deleteBook(bookId) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.delete(API_URL + `/books/${bookId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return res.data;
+  } catch (err) {
+    console.log(
+      "Deleting book failed:",
+      err.response?.data?.error?.message || err,
+    );
+  }
+}
