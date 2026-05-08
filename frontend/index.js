@@ -106,8 +106,21 @@ function renderLoginPage() {
   clearContainer();
   //DOM
   const page = document.createElement("div");
+  page.classList.add("login-page");
+
+  if (document.body.classList.contains("modern")) {
+    page.style.backgroundImage = "url('./images/modern.png')";
+  } else if (document.body.classList.contains("retro")) {
+    page.style.backgroundImage = "url('./images/retro.png')";
+  } else if (document.body.classList.contains("vaporwave")) {
+    page.style.backgroundImage = "url('./images/vaporwave.png')";
+  }
+  page.style.backgroundSize = "cover";
+  page.style.backgroundPosition = "center";
+  page.style.minHeight = "100vh";
 
   const loginForm = document.createElement("form");
+  loginForm.classList.add("login-form");
   const labelOne = document.createElement("label");
   const inputUsername = document.createElement("input");
   inputUsername.classList.add("username-input");
@@ -125,6 +138,7 @@ function renderLoginPage() {
   loginBtn.innerText = "Log In";
   loginBtn.type = "submit";
   text.innerText = "If you have no account, ";
+  text.style.textAlign = "center";
   registerBtn.innerText = "Register here";
   registerBtn.classList.add("register-btn");
   registerBtn.type = "button";
@@ -160,8 +174,21 @@ function renderRegisterPage() {
   clearContainer();
   //DOM
   const page = document.createElement("div");
+  page.classList.add("login-page");
+
+  if (document.body.classList.contains("modern")) {
+    page.style.backgroundImage = "url('./images/modern.png')";
+  } else if (document.body.classList.contains("retro")) {
+    page.style.backgroundImage = "url('./images/retro.png')";
+  } else if (document.body.classList.contains("vaporwave")) {
+    page.style.backgroundImage = "url('./images/vaporwave.png')";
+  }
+  page.style.backgroundSize = "cover";
+  page.style.backgroundPosition = "center";
+  page.style.minHeight = "100vh";
 
   const registerForm = document.createElement("form");
+  registerForm.classList.add("login-form");
   const labelOne = document.createElement("label");
   const inputUsername = document.createElement("input");
   inputUsername.classList.add("username-input");
@@ -184,6 +211,7 @@ function renderRegisterPage() {
   loginBtn.innerText = "Log In";
   loginBtn.type = "button";
   text.innerText = "If you have an account, ";
+  text.style.textAlign = "center";
   registerBtn.innerText = "Register here";
   registerBtn.classList.add("register-btn");
   registerBtn.type = "button";
