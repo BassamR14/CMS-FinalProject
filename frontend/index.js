@@ -275,6 +275,7 @@ async function renderHome() {
 
   function renderBooks(list) {
     booksDisplay.querySelectorAll(".card").forEach((c) => c.remove());
+    booksDisplay.querySelectorAll("p").forEach((p) => p.remove());
 
     list.forEach((book) => {
       const card = document.createElement("div");
@@ -313,6 +314,12 @@ async function renderHome() {
         renderBookPage(book);
       });
     });
+
+    if (list.length === 0) {
+      const message = document.createElement("p");
+      message.innerText = "No Books Found";
+      booksDisplay.append(message);
+    }
   }
 
   renderBooks(books);
@@ -333,12 +340,6 @@ async function renderHome() {
           b.title.toLowerCase().includes(searchInput) ||
           b.author.toLowerCase().includes(searchInput),
       );
-
-      if (filtered.length === 0) {
-        const message = document.createElement("p");
-        message.innerText = "No Books Found";
-        booksDisplay.append(message);
-      }
 
       renderBooks(filtered);
     }
