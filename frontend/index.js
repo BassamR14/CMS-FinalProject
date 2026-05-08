@@ -694,6 +694,20 @@ async function renderAdmin() {
   labelPages.innerText = "Pages: ";
   labelPages.append(pages);
 
+  const categories = ["novel", "educational", "comic-book"];
+  const labelCategory = document.createElement("label");
+  const category = document.createElement("select");
+  labelCategory.innerText = "Category:";
+
+  categories.forEach((cat) => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.innerText = cat;
+    category.append(option);
+  });
+
+  labelCategory.append(category);
+
   const labelDate = document.createElement("label");
   const date = document.createElement("input");
   date.type = "date";
@@ -715,6 +729,7 @@ async function renderAdmin() {
     labelTitle,
     labelAuthor,
     labelPages,
+    labelCategory,
     labelDate,
     labelImg,
     addBookBtn,
@@ -747,6 +762,7 @@ async function renderAdmin() {
       title: title.value,
       author: author.value,
       pages: pages.value,
+      category: category.value,
       release_date: date.value,
       cover: uploadedImage[0].id,
     };
