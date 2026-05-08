@@ -115,10 +115,6 @@ nav button:hover {
   font-size: 1.2rem;
 }
 
-.hero {
-  width: 100vw;
-}
-
 button.active {
   background-color: var(--text);
   color: var(--bg);
@@ -140,13 +136,9 @@ button.active {
   gap: 20px;
 }
 
-/* .categories {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  border-right: 1px solid var(--text);
-  padding: 10px;
-} */
+.hero {
+  width: 100vw;
+}
 
 .book-display {
   display: flex;
@@ -258,4 +250,17 @@ button.active {
 .categories button.active {
   background: var(--text);
   color: var(--bg);
+}
+
+/* Admin Page */
+
+.add-book-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.admin-container {
+  display: flex;
+  gap: 10px;
 }

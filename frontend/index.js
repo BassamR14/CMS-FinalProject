@@ -641,8 +641,37 @@ async function renderAdmin() {
 
   const page = document.createElement("div");
   const pageTitle = document.createElement("h2");
+  pageTitle.innerText = "Admin Dashboard";
   const pagecontainer = document.createElement("div");
+  pagecontainer.classList.add("admin-container");
   const form = document.createElement("form");
+  form.classList.add("add-book-form");
+  const table = document.createElement("table");
+
+  const tableHeader = document.createElement("th");
+  const bookName = document.createElement("td");
+  const bookAuthor = document.createElement("td");
+  const bookDate = document.createElement("td");
+  const bookPages = document.createElement("td");
+  const bookRating = document.createElement("td");
+  const bookActions = document.createElement("td");
+
+  bookName.innerText = "Title";
+  bookAuthor.innerText = "Author";
+  bookDate.innerText = "Release Date";
+  bookPages.innerText = "Pages";
+  bookRating.innerText = "Rating";
+  bookActions.innerText = "Actions";
+
+  tableHeader.append(
+    bookName,
+    bookAuthor,
+    bookDate,
+    bookPages,
+    bookRating,
+    bookActions,
+  );
+  table.append(tableHeader);
 
   const formTitle = document.createElement("h3");
   formTitle.innerText = "Add Book";
@@ -688,7 +717,7 @@ async function renderAdmin() {
     labelImg,
     addBookBtn,
   );
-  pagecontainer.append(form);
+  pagecontainer.append(form, table);
   page.append(pageTitle, pagecontainer);
   container.append(page);
 
@@ -722,6 +751,40 @@ async function renderAdmin() {
 
     await createBook(newBook);
   });
+
+  function renderTable(list) {
+    list.forEach((book) => {
+      const tr = document.createElement("tr");
+      // const img = document.createElement("img");
+      const title = document.createElement("td");
+      const author = document.createElement("td");
+      const date = document.createElement("td");
+      const pages = document.createElement("td");
+      const rating = document.createElement("td");
+      const actions = document.createElement("td");
+      const editBtn = document.createElement("button");
+      const deleteBtn = document.createElement("button");
+
+      const average =
+        book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
+
+      // img.src = "http://localhost:1337" + book.cover.url;
+      title.innerText = book.title;
+      author.innerText = `${book.author}`;
+      date.innerText = `${book.release_date} `;
+      pages.innerText = `${book.pages}`;
+      rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
+      editBtn.innerText = "Edit";
+      deleteBtn.innerText = "Delete";
+
+      actions.append(editBtn, deleteBtn);
+      tr.append(img, title, author, date, pages, rating, actions);
+      table.append(tr);
+    });
+  }
+
+  const books = await getBooks();
+  renderTable(books);
 }
 
 //Page Load
