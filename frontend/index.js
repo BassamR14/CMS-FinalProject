@@ -409,6 +409,10 @@ async function renderBookPage(book) {
   const wishlistBtn = document.createElement("button");
   const rateThisBookBtn = document.createElement("button");
 
+  leftSide.classList.add("book-page-left");
+  rightSide.classList.add("book-page-right");
+  ratingSection.classList.add("rating-section");
+
   const average =
     book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
 
@@ -499,6 +503,7 @@ async function renderProfile() {
   const userRatedBooks = user.ratings;
 
   const page = document.createElement("div");
+  page.classList.add("profile-page");
   // const name = document.createElement("h2");
   // const email = document.createElement("p");
   const toRead = document.createElement("h2");
@@ -510,7 +515,9 @@ async function renderProfile() {
   ratedBooks.innerText = "Rated Books";
 
   const toReadContainer = document.createElement("div");
+  toReadContainer.classList.add("list");
   const sortContainer = document.createElement("div");
+  sortContainer.classList.add("sort-container");
   const sortText = document.createElement("p");
   const sortByAuthorBtn = document.createElement("button");
   const sortByTitleBtn = document.createElement("button");
@@ -520,7 +527,9 @@ async function renderProfile() {
   sortByTitleBtn.innerText = "Title";
 
   const ratedBooksContainer = document.createElement("div");
+  ratedBooksContainer.classList.add("list");
   const ratedSortContainer = document.createElement("div");
+  ratedSortContainer.classList.add("sort-container");
   const sortRatedText = document.createElement("p");
   const sortRatedByAuthorBtn = document.createElement("button");
   const sortRatedByTitleBtn = document.createElement("button");
@@ -532,15 +541,15 @@ async function renderProfile() {
   sortRatedByRatingBtn.innerText = "Rating";
 
   sortContainer.append(sortText, sortByAuthorBtn, sortByTitleBtn);
-  toReadContainer.append(sortContainer);
+  toReadContainer.append(toRead, sortContainer);
   ratedSortContainer.append(
     sortRatedText,
     sortRatedByAuthorBtn,
     sortRatedByTitleBtn,
     sortRatedByRatingBtn,
   );
-  ratedBooksContainer.append(ratedSortContainer);
-  page.append(toRead, toReadContainer, ratedBooks, ratedBooksContainer);
+  ratedBooksContainer.append(ratedBooks, ratedSortContainer);
+  page.append(toReadContainer, ratedBooksContainer);
   container.append(page);
 
   function renderReadingList(list) {
@@ -549,7 +558,11 @@ async function renderProfile() {
     list.forEach((book) => {
       const card = document.createElement("div");
       card.classList.add("card");
+      card.classList.add("profile");
+
       const img = document.createElement("img");
+      const info = document.createElement("div");
+      info.classList.add("info");
       const title = document.createElement("h2");
       const author = document.createElement("p");
       const date = document.createElement("p");
@@ -563,7 +576,8 @@ async function renderProfile() {
       pages.innerText = `Pages: ${book.pages}`;
       removeBtn.innerText = "Remove";
 
-      card.append(img, title, author, date, pages, removeBtn);
+      info.append(title, author, date, pages, removeBtn);
+      card.append(info, img);
       toReadContainer.append(card);
 
       removeBtn.addEventListener("click", async () => {
@@ -603,7 +617,10 @@ async function renderProfile() {
     list.forEach((book) => {
       const card = document.createElement("div");
       card.classList.add("card");
+      card.classList.add("profile");
       const img = document.createElement("img");
+      const info = document.createElement("div");
+      info.classList.add("info");
       const title = document.createElement("h2");
       const author = document.createElement("p");
       const rating = document.createElement("p");
@@ -613,7 +630,8 @@ async function renderProfile() {
       author.innerText = `by ${book.book.author}`;
       rating.innerText = `My rating: ${book.value}/5`;
 
-      card.append(img, title, author, rating);
+      info.append(title, author, rating);
+      card.append(info, img);
       ratedBooksContainer.append(card);
     });
   }

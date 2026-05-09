@@ -19,6 +19,7 @@ body.retro {
   --btn-text: #f5f0e8;
   --font-heading: "Playfair Display", serif;
   --font-body: "Crimson Text", serif;
+  font-size: 18px;
 }
 
 body.vaporwave {
@@ -56,7 +57,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: var(--bg);
+  background-color: var(--card-bg);
   width: 100%;
 
   border-bottom: 1px solid var(--border);
@@ -99,7 +100,6 @@ nav button {
   color: var(--btn-text);
   padding: 6px 16px;
   cursor: pointer;
-  font-size: 0.9rem;
   transition:
     background 0.2s,
     color 0.2s;
@@ -150,6 +150,7 @@ button.active {
 
 button {
   font-family: var(--font-body);
+  font-size: 1rem;
 }
 
 /* Page Styling */
@@ -227,7 +228,6 @@ button {
   background: var(--btn-bg);
   color: var(--btn-text);
   cursor: pointer;
-  font-size: 0.85rem;
   transition:
     background 0.2s,
     color 0.2s;
@@ -265,7 +265,6 @@ button {
   color: var(--btn-text);
   padding: 6px 14px;
   cursor: pointer;
-  font-size: 0.85rem;
   text-align: center;
   transition:
     background 0.2s,
@@ -343,7 +342,6 @@ button {
   background: var(--btn-bg);
   color: var(--btn-text);
   cursor: pointer;
-  font-size: 0.9rem;
   transition: opacity 0.2s;
 }
 
@@ -383,7 +381,6 @@ tr td button {
   background-color: var(--btn-bg);
   color: var(--btn-text);
   cursor: pointer;
-  font-size: 0.8rem;
   margin-right: 6px;
   transition:
     background 0.2s,
@@ -471,10 +468,188 @@ tr td button:hover {
   background: var(--btn-bg);
   color: var(--btn-text);
   cursor: pointer;
-  font-size: 0.9rem;
   transition: opacity 0.2s;
 }
 
 .login-form button:hover {
   opacity: 0.8;
+}
+
+/* Profile Page */
+.profile-page {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  padding: 40px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.list h2 {
+  font-family: var(--font-heading);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sort-container p {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sort-container button {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text);
+  padding: 4px 12px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+
+.sort-container button:hover {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+
+.sort-container button.active {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+}
+
+.card.profile {
+  flex-direction: row;
+  width: 400px;
+  height: auto;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+  cursor: default;
+  background-color: var(--card-bg);
+}
+
+.card.profile .info {
+  flex: 1;
+}
+
+.card.profile:hover {
+  outline: 2px solid var(--border);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card.profile img {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.card.profile button {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  border-color: var(--btn-bg);
+}
+
+.card.profile button:hover {
+  opacity: 0.8;
+}
+
+/* Book-Page */
+.book-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 60px;
+  padding: 50px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.book-page-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 400px;
+}
+
+.book-page-left h2 {
+  font-family: var(--font-heading);
+  margin: 0;
+}
+
+.book-page-left p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.book-page-right img {
+  width: 320px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  position: sticky;
+  top: 80px;
+}
+
+.book-page-left button {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  cursor: pointer;
+  width: fit-content;
+  transition: opacity 0.2s;
+}
+
+.book-page-left button:hover {
+  opacity: 0.8;
+}
+
+.rating-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.rating-section label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rating-section select {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+}
+
+.rating-section select:focus {
+  outline: 2px solid var(--text);
 }
