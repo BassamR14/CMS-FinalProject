@@ -4,6 +4,10 @@ body.modern {
   --text: #1a1a1a;
   --border: #1a1a1a;
   --card-bg: #f5f5f5;
+  --btn-bg: #1a1a1a;
+  --btn-text: #ffffff;
+  --font-heading: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
 }
 
 body.retro {
@@ -11,6 +15,10 @@ body.retro {
   --text: #2c2c2c;
   --border: #8b7355;
   --card-bg: #ede8dc;
+  --btn-bg: #8b7355;
+  --btn-text: #f5f0e8;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Crimson Text", serif;
 }
 
 body.vaporwave {
@@ -18,6 +26,11 @@ body.vaporwave {
   --text: #ff71ce;
   --border: #b967ff;
   --card-bg: #2d0a4e;
+  --accent: #01cdfe;
+  --btn-bg: #b967ff;
+  --btn-text: #1a0533;
+  --font-heading: "Orbitron", sans-serif;
+  --font-body: "Share Tech Mono", monospace;
 }
 
 /* General Styling */
@@ -29,12 +42,26 @@ body {
   color: var(--text);
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+}
+
+body {
+  font-family: var(--font-body);
+}
+
 header {
   position: sticky;
   top: 0;
   z-index: 100;
   background-color: var(--bg);
   width: 100%;
+
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  background-color: color-mix(in srgb, var(--bg) 85%, transparent);
 }
 
 .header-inner {
@@ -68,7 +95,8 @@ nav button {
   background: transparent;
   border: 1px solid var(--border);
   border-radius: 20px;
-  color: var(--text);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   padding: 6px 16px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -78,8 +106,7 @@ nav button {
 }
 
 nav button:hover {
-  background: var(--text);
-  color: var(--bg);
+  opacity: 0.8;
 }
 
 .header-left {
@@ -116,28 +143,28 @@ nav button:hover {
 }
 
 button.active {
-  background-color: var(--text);
-  color: var(--bg);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  opacity: 0.8;
+}
+
+button {
+  font-family: var(--font-body);
 }
 
 /* Page Styling */
 
 /* Home-page */
-.book-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 100px;
-  padding: 50px;
+
+.hero {
+  width: 100vw;
+  height: 400px;
+  object-fit: cover;
 }
 
 .books-container {
   display: flex;
   gap: 20px;
-}
-
-.hero {
-  width: 100vw;
 }
 
 .book-display {
@@ -159,15 +186,17 @@ button.active {
   text-align: center;
   gap: 4px;
   transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+    box-shadow 0.2s,
+    outline 0.2s;
+
   cursor: pointer;
   background-color: var(--card-bg);
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: none;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  outline: 2px solid var(--border);
 }
 
 .card img {
@@ -195,7 +224,8 @@ button.active {
   border: 1px solid var(--border);
   border-radius: 20px;
   background: transparent;
-  color: var(--text);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   cursor: pointer;
   font-size: 0.85rem;
   transition:
@@ -204,8 +234,7 @@ button.active {
 }
 
 .card button:hover {
-  background: var(--text);
-  color: var(--bg);
+  opacity: 0.8;
 }
 
 .categories {
@@ -232,7 +261,8 @@ button.active {
   background: transparent;
   border: 1px solid var(--border);
   border-radius: 20px;
-  color: var(--text);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   padding: 6px 14px;
   cursor: pointer;
   font-size: 0.85rem;
@@ -243,13 +273,22 @@ button.active {
 }
 
 .categories button:hover {
-  background: var(--text);
-  color: var(--bg);
+  opacity: 0.8;
 }
 
 .categories button.active {
-  background: var(--text);
-  color: var(--bg);
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  opacity: 0.8;
+}
+
+/* Book Page */
+.book-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  padding: 50px;
 }
 
 /* Admin Page */
@@ -301,8 +340,8 @@ button.active {
   padding: 8px 16px;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: var(--text);
-  color: var(--bg);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   cursor: pointer;
   font-size: 0.9rem;
   transition: opacity 0.2s;
@@ -341,7 +380,8 @@ tr td button {
   border-radius: 20px;
   border: 1px solid var(--border);
   background: transparent;
-  color: var(--text);
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
   cursor: pointer;
   font-size: 0.8rem;
   margin-right: 6px;
@@ -351,8 +391,7 @@ tr td button {
 }
 
 tr td button:hover {
-  background: var(--text);
-  color: var(--bg);
+  opacity: 0.8;
 }
 
 .admin-page {
@@ -429,8 +468,8 @@ tr td button:hover {
   padding: 8px 16px;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: var(--text);
-  color: var(--bg);
+  background: var(--btn-bg);
+  color: var(--btn-text);
   cursor: pointer;
   font-size: 0.9rem;
   transition: opacity 0.2s;

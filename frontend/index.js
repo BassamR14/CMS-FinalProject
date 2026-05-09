@@ -135,6 +135,7 @@ function renderLoginPage() {
   loginBtn.classList.add("login-btn");
   const text = document.createElement("p");
   const registerBtn = document.createElement("button");
+  const errorMsg = document.createElement("p");
 
   labelOne.innerText = "Username: ";
   labelTwo.innerText = "Password: ";
@@ -150,7 +151,7 @@ function renderLoginPage() {
   labelOne.append(inputUsername);
   labelTwo.append(inputPassword);
   text.append(registerBtn);
-  loginForm.append(labelOne, labelTwo, loginBtn, text);
+  loginForm.append(labelOne, labelTwo, loginBtn, text, errorMsg);
   page.append(loginForm);
   container.append(page);
 
@@ -164,9 +165,7 @@ function renderLoginPage() {
     const password = inputPassword.value;
     const result = await login(username, password);
     if (result.error) {
-      const errorMsg = document.createElement("p");
       errorMsg.innerText = result.error;
-      page.append(errorMsg);
     } else {
       updateNav();
       renderHome();
@@ -242,6 +241,7 @@ async function renderHome() {
 
   //DOM
   const page = document.createElement("div");
+  page.classList.add("home-page");
   const hero = document.createElement("img");
   hero.classList.add("hero");
   const booksContainer = document.createElement("div");
@@ -499,13 +499,13 @@ async function renderProfile() {
   const userRatedBooks = user.ratings;
 
   const page = document.createElement("div");
-  const name = document.createElement("h2");
-  const email = document.createElement("p");
+  // const name = document.createElement("h2");
+  // const email = document.createElement("p");
   const toRead = document.createElement("h2");
   const ratedBooks = document.createElement("h2");
 
-  name.innerText = user.username;
-  email.innerText = user.email;
+  // name.innerText = user.username;
+  // email.innerText = user.email;
   toRead.innerText = "Reading List";
   ratedBooks.innerText = "Rated Books";
 
@@ -540,7 +540,7 @@ async function renderProfile() {
     sortRatedByRatingBtn,
   );
   ratedBooksContainer.append(ratedSortContainer);
-  page.append(name, email, toRead, toReadContainer, ratedBooksContainer);
+  page.append(toRead, toReadContainer, ratedBooks, ratedBooksContainer);
   container.append(page);
 
   function renderReadingList(list) {
