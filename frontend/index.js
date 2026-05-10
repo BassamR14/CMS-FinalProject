@@ -95,12 +95,6 @@ async function applyTheme() {
   document.body.className = settings.theme;
 }
 
-function checkIfRated(user, book, rateButton) {
-  if (user && user.ratings.some((r) => r.book.documentId === book.documentId)) {
-    rateButton.innerText = ` Change Rating`;
-  }
-}
-
 function chooseBackground(element) {
   if (document.body.classList.contains("modern")) {
     element.style.backgroundImage = "url('./images/modern.png')";
@@ -296,7 +290,9 @@ async function renderHome() {
       author.innerText = `by ${book.author}`;
       date.innerText = `Release Date: ${book.release_date} `;
       pages.innerText = `Pages:${book.pages}`;
-      rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
+      rating.innerText = book.ratings.length
+        ? `${average}/5 ⭐`
+        : "no rating yet";
       wishlistBtn.innerText = "Want to Read";
 
       checkIfWishlisted(user, book, wishlistBtn);
@@ -392,12 +388,16 @@ async function renderBookPage(book) {
   const user = token ? await getMe() : null;
 
   //DOM
-
   const page = document.createElement("div");
-  page.classList.add("book-page");
+  page.classList.add("book-page-wrapper");
+
+  const bookInfo = document.createElement("div");
+  bookInfo.classList.add("book-page");
   const leftSide = document.createElement("div");
   const rightSide = document.createElement("div");
-  const ratingSection = document.createElement("div");
+
+  leftSide.classList.add("book-page-left");
+  rightSide.classList.add("book-page-right");
 
   const backBtn = document.createElement("button");
   const img = document.createElement("img");
@@ -405,64 +405,96 @@ async function renderBookPage(book) {
   const author = document.createElement("p");
   const date = document.createElement("p");
   const pages = document.createElement("p");
-  // const rating = document.createElement("p");
-  const ratingDisplay = document.createElement("p");
+
+  const communityRatingLabel = document.createElement("p");
   const rating = document.createElement("input");
-  const wishlistBtn = document.createElement("button");
-  const rateThisBookBtn = document.createElement("button");
-
-  leftSide.classList.add("book-page-left");
-  rightSide.classList.add("book-page-right");
-  ratingSection.classList.add("rating-section");
-
-  const average =
-    book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
-
-  backBtn.innerText = "Back";
-  img.src = "http://localhost:1337" + book.cover.url;
-  title.innerText = book.title;
-  author.innerText = `by ${book.author}`;
-  date.innerText = `Release Date: ${book.release_date} `;
-  pages.innerText = `Pages:${book.pages}`;
-  // rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
-  ratingDisplay.innerText = book.ratings.length
-    ? `${average}/5 ⭐`
-    : "No ratings yet";
   rating.type = "range";
   rating.min = "0.5";
   rating.step = "0.5";
   rating.max = "5";
-  rating.style.setProperty("--val", rating.value / 5);
-
   rating.classList.add("star-rating");
   rating.disabled = true;
+
+  const average =
+    book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
+
+  const wishlistBtn = document.createElement("button");
+
+  const divider = document.createElement("hr");
+
+  // Personal rating section
+  const ratingSection = document.createElement("div");
+  ratingSection.classList.add("rating-section");
+  const ratingLabel = document.createElement("p");
+  const ratingInput = document.createElement("input");
+  const ratingValue = document.createElement("p");
+  const saveRating = document.createElement("button");
+  const rateThisBookBtn = document.createElement("button");
+
+  backBtn.classList.add("back-btn");
+  backBtn.innerText = "Back";
+  img.src = "http://localhost:1337" + book.cover.url;
+  title.innerText = book.title;
+  author.innerText = `by ${book.author}`;
+  date.innerText = `Release Date: ${book.release_date}`;
+  pages.innerText = `Pages: ${book.pages}`;
+
+  communityRatingLabel.innerText = book.ratings.length
+    ? `Community rating: ${average}/5`
+    : "No ratings yet";
   rating.value = book.ratings.length ? average : "0";
   rating.style.setProperty("--val", (book.ratings.length ? average : 0) / 5);
 
   wishlistBtn.innerText = "Want to Read";
-  rateThisBookBtn.innerText = "Rate This Book";
-
   checkIfWishlisted(user, book, wishlistBtn);
-  checkIfRated(user, book, rateThisBookBtn);
 
-  ratingSection.append(rateThisBookBtn);
+  if (token) {
+    ratingInput.type = "range";
+    ratingInput.min = "0.5";
+    ratingInput.step = "0.5";
+    ratingInput.max = "5";
+    ratingInput.classList.add("star-rating");
+    saveRating.innerText = "Save Rating";
+
+    // set initial value to existing rating if user has rated
+    const existingRating = user.ratings.find(
+      (r) => r.book.documentId === book.documentId,
+    );
+    ratingInput.value = existingRating ? existingRating.value : "2.5";
+    ratingValue.innerText = existingRating
+      ? `Your rating: ${ratingInput.value}/5`
+      : "Rate This Book";
+    ratingInput.style.setProperty("--val", ratingInput.value / 5);
+
+    ratingInput.addEventListener("input", () => {
+      ratingInput.style.setProperty("--val", ratingInput.value / 5);
+      ratingValue.innerText = `Your rating: ${ratingInput.value}/5`;
+    });
+
+    ratingSection.append(ratingValue, ratingInput, saveRating);
+  } else {
+    rateThisBookBtn.innerText = "Log in to rate this book";
+    rateThisBookBtn.addEventListener("click", renderLoginPage);
+    ratingSection.append(rateThisBookBtn);
+  }
+
   leftSide.append(
-    backBtn,
     title,
     author,
     date,
     pages,
-    ratingDisplay,
+    communityRatingLabel,
     rating,
     wishlistBtn,
+    divider,
     ratingSection,
   );
   rightSide.append(img);
-  page.append(leftSide, rightSide);
+  bookInfo.append(leftSide, rightSide);
+  page.append(backBtn, bookInfo);
   container.append(page);
 
   //Functionality
-
   backBtn.addEventListener("click", renderHome);
 
   wishlistBtn.addEventListener("click", async () => {
@@ -470,55 +502,21 @@ async function renderBookPage(book) {
     await handleWishlistClick(token, book, wishlistBtn);
   });
 
-  rateThisBookBtn.addEventListener("click", renderRatingSection);
+  saveRating.addEventListener("click", async () => {
+    const updatedUser = await getMe();
+    const existingRating = updatedUser.ratings.find(
+      (r) => r.book.documentId === book.documentId,
+    );
 
-  function renderRatingSection() {
-    ratingSection.innerHTML = "";
+    const res = existingRating
+      ? await updateRating(existingRating.documentId, ratingInput.value)
+      : await rateBook(book.documentId, user, ratingInput.value);
 
-    const label = document.createElement("label");
-    const ratingInput = document.createElement("input");
-    ratingInput.classList.add("star-rating");
-    const ratingValue = document.createElement("p");
-    const saveRating = document.createElement("button");
-
-    ratingInput.type = "range";
-    ratingInput.min = "0.5";
-    ratingInput.step = "0.5";
-    ratingInput.max = "5";
-    ratingInput.value = "2.5"; // default
-
-    ratingValue.innerText = `${ratingInput.value}/5`;
-
-    // update display as slider moves
-    ratingInput.addEventListener("input", () => {
-      ratingInput.style.setProperty("--val", ratingInput.value / 5);
-      ratingValue.innerText = `${ratingInput.value}/5`;
-    });
-
-    label.innerText = "Your rating:";
-    saveRating.innerText = "Save Rating";
-
-    ratingSection.append(label, ratingInput, ratingValue, saveRating);
-
-    ratingInput.style.setProperty("--val", ratingInput.value / 5);
-    console.log("--val:", ratingInput.value / 5);
-
-    saveRating.addEventListener("click", async () => {
-      const updatedUser = await getMe();
-      const existingRating = updatedUser.ratings.find(
-        (r) => r.book.documentId === book.documentId,
-      );
-
-      const res = existingRating
-        ? await updateRating(existingRating.documentId, ratingInput.value)
-        : await rateBook(book.documentId, user, ratingInput.value);
-
-      if (res) {
-        const freshBook = await getBook(book.documentId);
-        await renderBookPage(freshBook);
-      }
-    });
-  }
+    if (res) {
+      const freshBook = await getBook(book.documentId);
+      await renderBookPage(freshBook);
+    }
+  });
 }
 
 async function renderProfile() {
@@ -655,7 +653,7 @@ async function renderProfile() {
       img.src = "http://localhost:1337" + book.book.cover?.url;
       title.innerText = book.book.title;
       author.innerText = `by ${book.book.author}`;
-      rating.innerText = `My rating: ${book.value}/5`;
+      rating.innerText = `My rating: ${book.value}/5 ⭐`;
 
       info.append(title, author, rating);
       card.append(info, img);
@@ -862,7 +860,9 @@ async function renderAdmin() {
       author.innerText = `${book.author}`;
       date.innerText = `${book.release_date} `;
       pages.innerText = `${book.pages}`;
-      rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
+      rating.innerText = book.ratings.length
+        ? `${average}/5 ⭐`
+        : "no rating yet";
       editBtn.innerText = "Edit";
       deleteBtn.innerText = "Delete";
 
