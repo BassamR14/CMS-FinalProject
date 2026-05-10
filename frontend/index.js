@@ -405,7 +405,9 @@ async function renderBookPage(book) {
   const author = document.createElement("p");
   const date = document.createElement("p");
   const pages = document.createElement("p");
-  const rating = document.createElement("p");
+  // const rating = document.createElement("p");
+  const ratingDisplay = document.createElement("p");
+  const rating = document.createElement("input");
   const wishlistBtn = document.createElement("button");
   const rateThisBookBtn = document.createElement("button");
 
@@ -422,7 +424,21 @@ async function renderBookPage(book) {
   author.innerText = `by ${book.author}`;
   date.innerText = `Release Date: ${book.release_date} `;
   pages.innerText = `Pages:${book.pages}`;
-  rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
+  // rating.innerText = book.ratings.length ? `${average}/5` : "no rating yet";
+  ratingDisplay.innerText = book.ratings.length
+    ? `${average}/5 ⭐`
+    : "No ratings yet";
+  rating.type = "range";
+  rating.min = "0.5";
+  rating.step = "0.5";
+  rating.max = "5";
+  rating.style.setProperty("--val", rating.value / 5);
+
+  rating.classList.add("star-rating");
+  rating.disabled = true;
+  rating.value = book.ratings.length ? average : "0";
+  rating.style.setProperty("--val", (book.ratings.length ? average : 0) / 5);
+
   wishlistBtn.innerText = "Want to Read";
   rateThisBookBtn.innerText = "Rate This Book";
 
@@ -436,6 +452,7 @@ async function renderBookPage(book) {
     author,
     date,
     pages,
+    ratingDisplay,
     rating,
     wishlistBtn,
     ratingSection,
@@ -459,22 +476,32 @@ async function renderBookPage(book) {
     ratingSection.innerHTML = "";
 
     const label = document.createElement("label");
-    const select = document.createElement("select");
+    const ratingInput = document.createElement("input");
+    ratingInput.classList.add("star-rating");
+    const ratingValue = document.createElement("p");
     const saveRating = document.createElement("button");
-    const availableRatings = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
-    availableRatings.forEach((rating) => {
-      const option = document.createElement("option");
-      option.value = rating;
-      option.innerText = rating;
-      select.append(option);
+    ratingInput.type = "range";
+    ratingInput.min = "0.5";
+    ratingInput.step = "0.5";
+    ratingInput.max = "5";
+    ratingInput.value = "2.5"; // default
+
+    ratingValue.innerText = `${ratingInput.value}/5`;
+
+    // update display as slider moves
+    ratingInput.addEventListener("input", () => {
+      ratingInput.style.setProperty("--val", ratingInput.value / 5);
+      ratingValue.innerText = `${ratingInput.value}/5`;
     });
 
-    label.innerText = "/5";
+    label.innerText = "Your rating:";
     saveRating.innerText = "Save Rating";
 
-    label.prepend(select);
-    ratingSection.append(label, saveRating);
+    ratingSection.append(label, ratingInput, ratingValue, saveRating);
+
+    ratingInput.style.setProperty("--val", ratingInput.value / 5);
+    console.log("--val:", ratingInput.value / 5);
 
     saveRating.addEventListener("click", async () => {
       const updatedUser = await getMe();
@@ -483,8 +510,8 @@ async function renderBookPage(book) {
       );
 
       const res = existingRating
-        ? await updateRating(existingRating.documentId, select.value)
-        : await rateBook(book.documentId, user, select.value);
+        ? await updateRating(existingRating.documentId, ratingInput.value)
+        : await rateBook(book.documentId, user, ratingInput.value);
 
       if (res) {
         const freshBook = await getBook(book.documentId);
