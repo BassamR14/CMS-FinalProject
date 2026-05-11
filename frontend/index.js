@@ -225,7 +225,7 @@ function renderRegisterPage() {
     if (result.error) {
       const errorMsg = document.createElement("p");
       errorMsg.innerText = result.error;
-      loginForm.append(errorMsg);
+      registerForm.append(errorMsg);
     } else {
       updateNav();
       renderHome();
@@ -620,9 +620,15 @@ async function renderProfile() {
       card.append(info, img);
       toReadContainer.append(card);
 
-      removeBtn.addEventListener("click", async () => {
+      removeBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
         await removeBook(book.documentId);
         renderProfile();
+      });
+
+      card.addEventListener("click", async () => {
+        const freshBook = await getBook(book.documentId);
+        renderBookPage(freshBook);
       });
     });
   }
@@ -673,6 +679,11 @@ async function renderProfile() {
       info.append(title, author, rating);
       card.append(info, img);
       ratedBooksContainer.append(card);
+
+      card.addEventListener("click", async () => {
+        const freshBook = await getBook(book.book.documentId);
+        renderBookPage(freshBook);
+      });
     });
   }
 

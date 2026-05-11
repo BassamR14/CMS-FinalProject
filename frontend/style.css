@@ -84,7 +84,7 @@ header {
   width: 100%;
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(8px);
-  background-color: color-mix(in srgb, var(--bg) 85%, transparent);
+  background-color: color-mix(in srgb, var(--bg) 70%, var(--card-bg));
 }
 
 .header-inner {
@@ -92,6 +92,7 @@ header {
   align-items: center;
   justify-content: space-between;
   width: 90%;
+  height: var(--header-height);
   margin: 0 auto;
 }
 
@@ -242,7 +243,7 @@ hr {
 .book-page-wrapper {
   width: 90%;
   margin: 0 auto;
-  padding-top: 20px;
+  padding-top: 40px;
 }
 
 .back-btn {
@@ -253,9 +254,9 @@ hr {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 60px;
+  gap: 200px;
   padding: 50px;
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -269,6 +270,8 @@ hr {
 .book-page-left h2 {
   font-family: var(--font-heading);
   margin: 0;
+  font-size: 2rem;
+  margin: 0 0 8px 0;
 }
 
 .book-page-left p {
@@ -281,12 +284,13 @@ hr {
 }
 
 .book-page-right img {
-  width: 320px;
-  object-fit: contain;
+  width: 380px;
+  object-fit: cover;
   border-radius: 12px;
   border: 1px solid var(--border);
   position: sticky;
   top: 80px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .rating-section {
@@ -491,7 +495,7 @@ tr td button {
   gap: 16px;
   justify-content: space-between;
   align-items: center;
-  cursor: default;
+  cursor: pointer;
 }
 
 .card.profile .info {
