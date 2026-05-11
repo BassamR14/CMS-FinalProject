@@ -47,7 +47,10 @@ export async function getMe() {
 
     return res.data;
   } catch (err) {
-    console.log(err);
+    console.log(
+      "Get User Data failed:",
+      err.response?.data?.error?.message || err,
+    );
   }
 }
 
@@ -58,7 +61,10 @@ export async function getBooks() {
     );
     return res.data.data;
   } catch (err) {
-    console.log(err);
+    console.log(
+      "Getting Books failed:",
+      err.response?.data?.error?.message || err,
+    );
   }
 }
 
@@ -69,7 +75,12 @@ export async function getBook(documentId) {
         `/books/${documentId}?populate[cover]=true&populate[ratings]=true`,
     );
     return res.data.data;
-  } catch (err) {}
+  } catch (err) {
+    console.log(
+      "Getting Book failed:",
+      err.response?.data?.error?.message || err,
+    );
+  }
 }
 
 export async function saveBook(bookDocumentId) {
