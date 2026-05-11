@@ -198,11 +198,11 @@ function renderRegisterPage() {
   inputEmail.type = "email";
   labelThree.innerText = "Password: ";
   inputPassword.type = "password";
-  loginBtn.innerText = "Log In";
+  loginBtn.innerText = "Log In Here";
   loginBtn.type = "button";
   text.innerText = "If you have an account, ";
   text.style.textAlign = "center";
-  registerBtn.innerText = "Register here";
+  registerBtn.innerText = "Register";
   registerBtn.classList.add("register-btn");
   registerBtn.type = "button";
 
