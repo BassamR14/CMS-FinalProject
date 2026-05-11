@@ -441,6 +441,7 @@ export interface ApiBookBook extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    artist: Schema.Attribute.String;
     author: Schema.Attribute.String & Schema.Attribute.Required;
     category: Schema.Attribute.Enumeration<
       ['novel', 'educational', 'comic-book']

@@ -35,6 +35,9 @@ body.vaporwave {
 }
 
 /* General Styling */
+:root {
+  --header-height: 100px;
+}
 
 body {
   padding: 0;
@@ -75,6 +78,7 @@ button.active {
 /* Header */
 header {
   position: sticky;
+  height: var(--header-height);
   top: 0;
   z-index: 100;
   width: 100%;
@@ -222,7 +226,7 @@ hr {
   padding: 20px;
   min-width: 120px;
   position: sticky;
-  top: 20px;
+  top: calc(var(--header-height) + 20px);
   height: fit-content;
 }
 

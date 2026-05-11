@@ -259,7 +259,7 @@ async function renderHome() {
   const category = document.createElement("h2");
   category.innerText = "Category";
   const novelBtn = document.createElement("button");
-  novelBtn.innerText = "Novel";
+  novelBtn.innerText = "Novels";
   const educationalBtn = document.createElement("button");
   educationalBtn.innerText = "Educational";
   const comicBtn = document.createElement("button");
@@ -289,11 +289,11 @@ async function renderHome() {
       title.innerText = book.title;
       author.innerText = `by ${book.author}`;
       date.innerText = `Release Date: ${book.release_date} `;
-      pages.innerText = `Pages:${book.pages}`;
+      pages.innerText = `Pages: ${book.pages}`;
       rating.innerText = book.ratings.length
         ? `${average}/5 ⭐`
         : "no rating yet";
-      wishlistBtn.innerText = "Want to Read";
+      wishlistBtn.innerText = "Add to Reading List";
 
       checkIfWishlisted(user, book, wishlistBtn);
 
@@ -403,33 +403,31 @@ async function renderBookPage(book) {
   const img = document.createElement("img");
   const title = document.createElement("h2");
   const author = document.createElement("p");
+  const artist = document.createElement("p");
   const date = document.createElement("p");
   const pages = document.createElement("p");
-
+  const wishlistBtn = document.createElement("button");
+  const divider = document.createElement("hr");
   const communityRatingLabel = document.createElement("p");
   const rating = document.createElement("input");
+
+  const average =
+    book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
+
+  // Personal rating section
+  const ratingSection = document.createElement("div");
+  ratingSection.classList.add("rating-section");
+  const ratingInput = document.createElement("input");
+  const ratingValue = document.createElement("p");
+  const saveRating = document.createElement("button");
+  const rateThisBookBtn = document.createElement("button");
+
   rating.type = "range";
   rating.min = "0.5";
   rating.step = "0.5";
   rating.max = "5";
   rating.classList.add("star-rating");
   rating.disabled = true;
-
-  const average =
-    book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
-
-  const wishlistBtn = document.createElement("button");
-
-  const divider = document.createElement("hr");
-
-  // Personal rating section
-  const ratingSection = document.createElement("div");
-  ratingSection.classList.add("rating-section");
-  const ratingLabel = document.createElement("p");
-  const ratingInput = document.createElement("input");
-  const ratingValue = document.createElement("p");
-  const saveRating = document.createElement("button");
-  const rateThisBookBtn = document.createElement("button");
 
   backBtn.classList.add("back-btn");
   backBtn.innerText = "Back";
@@ -439,13 +437,17 @@ async function renderBookPage(book) {
   date.innerText = `Release Date: ${book.release_date}`;
   pages.innerText = `Pages: ${book.pages}`;
 
+  if (book.artist) {
+    artist.innerText = `Art by: ${book.artist}`;
+  }
+
   communityRatingLabel.innerText = book.ratings.length
     ? `Community rating: ${average}/5`
     : "No ratings yet";
   rating.value = book.ratings.length ? average : "0";
   rating.style.setProperty("--val", (book.ratings.length ? average : 0) / 5);
 
-  wishlistBtn.innerText = "Want to Read";
+  wishlistBtn.innerText = "Add to Reading List";
   checkIfWishlisted(user, book, wishlistBtn);
 
   if (token) {
@@ -454,12 +456,13 @@ async function renderBookPage(book) {
     ratingInput.step = "0.5";
     ratingInput.max = "5";
     ratingInput.classList.add("star-rating");
-    saveRating.innerText = "Save Rating";
 
     // set initial value to existing rating if user has rated
     const existingRating = user.ratings.find(
       (r) => r.book.documentId === book.documentId,
     );
+    saveRating.innerText = existingRating ? "Update Rating" : "Save Rating";
+
     ratingInput.value = existingRating ? existingRating.value : "2.5";
     ratingValue.innerText = existingRating
       ? `Your rating: ${ratingInput.value}/5`
@@ -478,9 +481,13 @@ async function renderBookPage(book) {
     ratingSection.append(rateThisBookBtn);
   }
 
+  leftSide.append(title, author);
+
+  if (book.artist) {
+    leftSide.append(artist);
+  }
+
   leftSide.append(
-    title,
-    author,
     date,
     pages,
     communityRatingLabel,

@@ -19,11 +19,22 @@
       "type": "string",
       "required": true
     },
+    "artist": {
+      "type": "string"
+    },
     "pages": {
       "type": "integer"
     },
     "release_date": {
       "type": "date"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "novel",
+        "educational",
+        "comic-book"
+      ]
     },
     "cover": {
       "type": "media",
@@ -46,14 +57,6 @@
       "relation": "oneToMany",
       "target": "api::rating.rating",
       "mappedBy": "book"
-    },
-    "category": {
-      "type": "enumeration",
-      "enum": [
-        "novel",
-        "educational",
-        "comic-book"
-      ]
     }
   }
 }
