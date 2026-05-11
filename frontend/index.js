@@ -26,6 +26,7 @@ homepage.addEventListener("click", renderHome);
 //Helper Functions
 function clearContainer() {
   container.innerHTML = "";
+  document.body.style.overflow = "";
 }
 
 function handleLogout() {
@@ -105,7 +106,7 @@ function chooseBackground(element) {
   }
   element.style.backgroundSize = "cover";
   element.style.backgroundPosition = "center";
-  element.style.minHeight = "100vh";
+  document.body.style.overflow = "hidden";
 }
 
 //Render Functions
@@ -129,7 +130,6 @@ function renderLoginPage() {
   loginBtn.classList.add("login-btn");
   const text = document.createElement("p");
   const registerBtn = document.createElement("button");
-  const errorMsg = document.createElement("p");
 
   labelOne.innerText = "Username: ";
   labelTwo.innerText = "Password: ";
@@ -145,7 +145,7 @@ function renderLoginPage() {
   labelOne.append(inputUsername);
   labelTwo.append(inputPassword);
   text.append(registerBtn);
-  loginForm.append(labelOne, labelTwo, loginBtn, text, errorMsg);
+  loginForm.append(labelOne, labelTwo, loginBtn, text);
   page.append(loginForm);
   container.append(page);
 
@@ -159,7 +159,9 @@ function renderLoginPage() {
     const password = inputPassword.value;
     const result = await login(username, password);
     if (result.error) {
+      const errorMsg = document.createElement("p");
       errorMsg.innerText = result.error;
+      loginForm.append(errorMsg);
     } else {
       updateNav();
       renderHome();
@@ -219,9 +221,15 @@ function renderRegisterPage() {
     const username = inputUsername.value;
     const email = inputEmail.value;
     const password = inputPassword.value;
-    await register(username, email, password);
-    updateNav();
-    renderHome();
+    const result = await register(username, email, password);
+    if (result.error) {
+      const errorMsg = document.createElement("p");
+      errorMsg.innerText = result.error;
+      loginForm.append(errorMsg);
+    } else {
+      updateNav();
+      renderHome();
+    }
   });
 }
 
