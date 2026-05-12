@@ -385,6 +385,10 @@ th {
   letter-spacing: 1px;
 }
 
+tr img {
+  height: 80px;
+}
+
 tr:hover {
   background: var(--card-bg);
 }

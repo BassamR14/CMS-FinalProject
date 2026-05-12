@@ -744,6 +744,7 @@ async function renderAdmin() {
   const table = document.createElement("table");
 
   const tableHeader = document.createElement("tr");
+  const bookCover = document.createElement("th");
   const bookName = document.createElement("th");
   const bookAuthor = document.createElement("th");
   const bookDate = document.createElement("th");
@@ -751,6 +752,7 @@ async function renderAdmin() {
   const bookRating = document.createElement("th");
   const bookActions = document.createElement("th");
 
+  bookCover.innerText = "Cover";
   bookName.innerText = "Title";
   bookAuthor.innerText = "Author";
   bookDate.innerText = "Release Date";
@@ -759,6 +761,7 @@ async function renderAdmin() {
   bookActions.innerText = "Actions";
 
   tableHeader.append(
+    bookCover,
     bookName,
     bookAuthor,
     bookDate,
@@ -868,7 +871,8 @@ async function renderAdmin() {
 
     list.forEach((book) => {
       const tr = document.createElement("tr");
-      // const img = document.createElement("img");
+      const imgCell = document.createElement("td");
+      const img = document.createElement("img");
       const title = document.createElement("td");
       const author = document.createElement("td");
       const date = document.createElement("td");
@@ -881,7 +885,7 @@ async function renderAdmin() {
       const average =
         book.ratings.reduce((sum, r) => sum + r.value, 0) / book.ratings.length;
 
-      // img.src = "http://localhost:1337" + book.cover.url;
+      img.src = "http://localhost:1337" + book.cover.url;
       title.innerText = book.title;
       author.innerText = `${book.author}`;
       date.innerText = `${book.release_date} `;
@@ -893,7 +897,8 @@ async function renderAdmin() {
       deleteBtn.innerText = "Delete";
 
       actions.append(editBtn, deleteBtn);
-      tr.append(title, author, date, pages, rating, actions);
+      imgCell.append(img);
+      tr.append(imgCell, title, author, date, pages, rating, actions);
       table.append(tr);
 
       //functionality
