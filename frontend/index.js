@@ -844,6 +844,15 @@ async function renderAdmin() {
 
   //Functionality
 
+  function clearForm() {
+    title.value = "";
+    author.value = "";
+    pages.value = "";
+    category.value = "novel";
+    date.value = "";
+    img.value = "";
+  }
+
   addBookBtn.addEventListener("click", async () => {
     if (!title.value || !author.value || !pages.value || !date.value) {
       alert("Please fill in all fields");
@@ -861,6 +870,7 @@ async function renderAdmin() {
       await updateBook(editingBookId, updatedBook);
       editingBookId = null;
       addBookBtn.innerText = "Add Book";
+      clearForm();
     } else {
       if (!img.files[0]) {
         alert("Please fill in all fields");
@@ -883,6 +893,7 @@ async function renderAdmin() {
       };
 
       await createBook(newBook);
+      clearForm();
     }
 
     const freshBooks = await getBooks();
