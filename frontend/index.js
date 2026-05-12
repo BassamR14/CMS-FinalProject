@@ -506,7 +506,7 @@ async function renderBookPage(book) {
     ratingSection,
   );
   rightSide.append(img);
-  bookInfo.append(leftSide, rightSide);
+  bookInfo.append(rightSide, leftSide);
   page.append(backBtn, bookInfo);
   container.append(page);
 
