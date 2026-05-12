@@ -867,8 +867,17 @@ async function renderAdmin() {
         category: category.value,
         release_date: date.value,
       };
+
+      if (img.files[0]) {
+        const imgData = new FormData();
+        imgData.append("files", img.files[0]);
+        const uploadedImage = await uploadImage(imgData);
+        updatedBook.cover = uploadedImage[0].id;
+      }
+
       await updateBook(editingBookId, updatedBook);
       editingBookId = null;
+      formTitle.innerText = "Add Book";
       addBookBtn.innerText = "Add Book";
       clearForm();
     } else {
@@ -952,6 +961,7 @@ async function renderAdmin() {
         document.querySelector(".category-select").value = book.category;
         document.querySelector(".date-input").value = book.release_date;
 
+        formTitle.innerText = "Edit Book";
         addBookBtn.innerText = "Update Book";
       });
     });
