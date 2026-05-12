@@ -243,3 +243,24 @@ export async function deleteBook(bookId) {
     );
   }
 }
+
+export async function updateBook(bookId, updatedBook) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.put(
+      API_URL + `/books/${bookId}`,
+      { data: updatedBook },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+
+    return res.data;
+  } catch (err) {
+    console.log(
+      "Adding book failed:",
+      err.response?.data?.error?.message || err,
+    );
+  }
+}

@@ -13,6 +13,7 @@ import {
   uploadImage,
   createBook,
   deleteBook,
+  updateBook,
 } from "./api.js";
 
 //Query Selects
@@ -733,6 +734,8 @@ async function renderProfile() {
 async function renderAdmin() {
   clearContainer();
 
+  let editingBookId = null;
+
   const page = document.createElement("div");
   page.classList.add("admin-page");
   const pageTitle = document.createElement("h2");
@@ -776,16 +779,19 @@ async function renderAdmin() {
 
   const labelTitle = document.createElement("label");
   const title = document.createElement("input");
+  title.classList.add("title-input");
   labelTitle.innerText = "Title: ";
   labelTitle.append(title);
 
   const labelAuthor = document.createElement("label");
   const author = document.createElement("input");
+  author.classList.add("author-input");
   labelAuthor.innerText = "Author: ";
   labelAuthor.append(author);
 
   const labelPages = document.createElement("label");
   const pages = document.createElement("input");
+  pages.classList.add("pages-input");
   pages.type = "number";
   labelPages.innerText = "Pages: ";
   labelPages.append(pages);
@@ -793,6 +799,7 @@ async function renderAdmin() {
   const categories = ["novel", "educational", "comic-book"];
   const labelCategory = document.createElement("label");
   const category = document.createElement("select");
+  category.classList.add("category-select");
   labelCategory.innerText = "Category:";
 
   categories.forEach((cat) => {
@@ -806,6 +813,7 @@ async function renderAdmin() {
 
   const labelDate = document.createElement("label");
   const date = document.createElement("input");
+  date.classList.add("date-input");
   date.type = "date";
   labelDate.innerText = "Release Date: ";
   labelDate.append(date);
@@ -837,33 +845,48 @@ async function renderAdmin() {
   //Functionality
 
   addBookBtn.addEventListener("click", async () => {
-    if (
-      !title.value ||
-      !author.value ||
-      !pages.value ||
-      !date.value ||
-      !img.files[0]
-    ) {
+    if (!title.value || !author.value || !pages.value || !date.value) {
       alert("Please fill in all fields");
       return;
     }
 
-    const image = img.files;
-    let imgData = new FormData();
-    imgData.append("files", image[0]);
+    if (editingBookId) {
+      const updatedBook = {
+        title: title.value,
+        author: author.value,
+        pages: pages.value,
+        category: category.value,
+        release_date: date.value,
+      };
+      await updateBook(editingBookId, updatedBook);
+      editingBookId = null;
+      addBookBtn.innerText = "Add Book";
+    } else {
+      if (!img.files[0]) {
+        alert("Please fill in all fields");
+        return;
+      }
 
-    const uploadedImage = await uploadImage(imgData);
+      const image = img.files;
+      let imgData = new FormData();
+      imgData.append("files", image[0]);
 
-    const newBook = {
-      title: title.value,
-      author: author.value,
-      pages: pages.value,
-      category: category.value,
-      release_date: date.value,
-      cover: uploadedImage[0].id,
-    };
+      const uploadedImage = await uploadImage(imgData);
 
-    await createBook(newBook);
+      const newBook = {
+        title: title.value,
+        author: author.value,
+        pages: pages.value,
+        category: category.value,
+        release_date: date.value,
+        cover: uploadedImage[0].id,
+      };
+
+      await createBook(newBook);
+    }
+
+    const freshBooks = await getBooks();
+    renderTable(freshBooks);
   });
 
   function renderTable(list) {
@@ -907,6 +930,18 @@ async function renderAdmin() {
         await deleteBook(book.documentId);
         const freshBooks = await getBooks();
         renderTable(freshBooks);
+      });
+
+      editBtn.addEventListener("click", () => {
+        editingBookId = book.documentId;
+
+        document.querySelector(".title-input").value = book.title;
+        document.querySelector(".author-input").value = book.author;
+        document.querySelector(".pages-input").value = book.pages;
+        document.querySelector(".category-select").value = book.category;
+        document.querySelector(".date-input").value = book.release_date;
+
+        addBookBtn.innerText = "Update Book";
       });
     });
   }
