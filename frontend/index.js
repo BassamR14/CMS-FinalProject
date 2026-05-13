@@ -300,7 +300,7 @@ async function renderHome() {
       date.innerText = `Release Date: ${book.release_date} `;
       pages.innerText = `Pages: ${book.pages}`;
       rating.innerText = book.ratings.length
-        ? `${average}/5 ⭐`
+        ? `${average}/5 ⭐ (${book.ratings.length})`
         : "no rating yet";
       wishlistBtn.innerText = "Add to Reading List";
 
@@ -451,7 +451,7 @@ async function renderBookPage(book) {
   }
 
   communityRatingLabel.innerText = book.ratings.length
-    ? `Community rating: ${average}/5`
+    ? `Community rating: ${average}/5 (${book.ratings.length})`
     : "No ratings yet";
   rating.value = book.ratings.length ? average : "0";
   rating.style.setProperty("--val", (book.ratings.length ? average : 0) / 5);
