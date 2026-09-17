@@ -9,6 +9,7 @@ export async function register(username, email, password) {
     });
 
     localStorage.setItem("token", res.data.jwt);
+    return res.data;
   } catch (err) {
     console.log(err);
   }
